@@ -1,0 +1,59 @@
+<nav style="margin:auto" class="navbar navbar-expand-lg bg-dark">
+  <a style="color: white;" class="navbar-brand" href="#">MedConnect</a>
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      <li class="nav-item">
+        <a style="color: white;" class="nav-link active" routerLink="/docdash">Back</a>
+      </li>
+      <li class="nav-item">
+        <a style="color: white;" class="nav-link active" routerLink="/create-medicine">Add Medicines</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<div class="container">
+  <h2>Medicines List </h2>
+  
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Select</th>
+        <th>Medicine Name</th>
+        <th>Time To Take</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let medicine of medicines">
+        <td>
+          <input type="checkbox" [value]="medicine.drugName" (change)="toggleMedicineSelection(medicine, $event)">
+        </td>
+        <td>{{medicine.drugName}}</td>
+        <td>
+          <ng-container *ngIf="getSelectedMedicine(medicine) as selectedMed">
+            <select
+              multiple
+              [(ngModel)]="selectedMed.timeToTake"
+              name="timeToTake-{{medicine.id}}"
+              class="form-control"
+              (change)="updateSelectedTimes(medicine, selectedMed.timeToTake)"
+            >
+              <option value="Morning">Morning</option>
+              <option value="Afternoon">Afternoon</option>
+              <option value="Night">Night</option>
+            </select>
+          </ng-container>
+        </td>
+        
+        
+      </tr>
+    </tbody>
+  </table>
+  
+  <div class="text-center mt-3">
+    <button class="btn btn-primary" (click)="assignSelectedMedicines()">Assign Selected Medicines</button>
+  </div>
+</div>

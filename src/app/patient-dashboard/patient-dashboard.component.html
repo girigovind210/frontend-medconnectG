@@ -1,0 +1,47 @@
+<div class="dashboard">
+
+<!-- Medical Stores Section -->
+<div class="store-section">
+
+  <h2>Nearby Medical Stores</h2>
+
+  <div class="stats">
+    <div>Total Stores: <b>{{ totalStores }}</b></div>
+    <div>Open Now: <b>{{ openStores }}</b></div>
+  </div>
+
+  <!-- Search -->
+  <div class="search-box">
+    <input
+      type="text"
+      placeholder="Search medicine (ex: Paracetamol)"
+      [(ngModel)]="search"
+    />
+    <button (click)="searchMedicine()">Search</button>
+  </div>
+
+  <!-- Cards -->
+  <div class="store-grid">
+
+    <div class="store-card" *ngFor="let store of stores">
+
+      <h3>{{ store.name }}</h3>
+
+      <p>
+        Status:
+        <span class="open" *ngIf="store.open">🟢 Open</span>
+        <span class="closed" *ngIf="!store.open">🔴 Closed</span>
+      </p>
+
+      <p><b>Distance:</b> {{ store.distance }} km</p>
+
+      <p><b>Medicines:</b></p>
+      <div class="med-list">
+        <span *ngFor="let m of store.medicines">{{ m }}</span>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
