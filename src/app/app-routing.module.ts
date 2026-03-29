@@ -36,9 +36,7 @@ const routes: Routes = [
   {
     path:'home',component:HomeComponent
   },
-  {
-    path:'',redirectTo:'home',pathMatch:'full'
-  },
+  { path:'', component: HomeComponent },
   {
     path:'docdash',component:DocdashComponent,canActivate:[DoctorauthguardService]
   },
