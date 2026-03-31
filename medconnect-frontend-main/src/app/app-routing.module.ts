@@ -19,14 +19,13 @@ import { PatientDashboardComponent } from './patient-dashboard/patient-dashboard
 
 const routes: Routes = [
 
-  { path: 'patient-dashboard', component: PatientDashboardComponent 
+  { path: 'patient-dashboard', component: PatientDashboardComponent },
 
-  },
+  { path: 'view-medicine/:id', component: MedicinelistComponent },
 
   {
     path:'admin',component:AdmindashComponent,canActivate:[AdminauthguardService]
   },
-
   {
     path:'appointmentlist',component:AppointmentComponent,canActivate:[AdminauthguardService]
   },
@@ -46,9 +45,6 @@ const routes: Routes = [
     path:'create-patient',component:CreatePatientComponent,canActivate:[DoctorauthguardService]
   },
   {
-    path:'view-medicine',component:MedicinelistComponent,canActivate:[DoctorauthguardService]
-  },
-  {
     path:'create-medicine',component:CreateMedicineComponent,canActivate:[DoctorauthguardService]
   },
   {
@@ -66,7 +62,6 @@ const routes: Routes = [
   {
     path:'adlogin',component:AdloginComponent
   }
-  
 ];
 
 @NgModule({

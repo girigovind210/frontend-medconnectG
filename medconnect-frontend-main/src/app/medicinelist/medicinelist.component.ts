@@ -19,9 +19,10 @@ export class MedicinelistComponent {
     timeToTake: string[]
   }[] = [];
 
-  assignedMedicines: any[] = []; // 🔥 assigned medicines store
+  assignedMedicines: any[] = [];
 
   patientId!: number;
+  loading: boolean = false;
 
   constructor(
     private router: Router,
@@ -31,60 +32,79 @@ export class MedicinelistComponent {
 
   ngOnInit(): void {
 
-    // 🔥 get patient id from route
-    this.patientId = Number(this.route.snapshot.params['id']);;
+    // 🔥 FIX: always parse safely
+    this.patientId = Number(this.route.snapshot.params['id']);
+
     console.log("Patient ID:", this.patientId);
 
-    if (!this.patientId) {
+    if (!this.patientId || isNaN(this.patientId)) {
       alert("Invalid Patient ID ❌");
       return;
     }
 
     this.getMedicine();
-    this.loadAssignedMedicines(); // 🔥 load already assigned
+    this.loadAssignedMedicines();
   }
 
   // 🔥 get all medicines
   getMedicine() {
+    this.loading = true;
+
     this.http.get<Medicine[]>(`${environment.apiUrl}/api/v3/medicines`)
-      .subscribe(data => {
-        this.medicines = data;
+      .subscribe({
+        next: (data) => {
+          this.medicines = data;
+          this.loading = false;
+        },
+        error: (err) => {
+          console.error(err);
+          this.loading = false;
+        }
       });
   }
 
-  // 🔥 get assigned medicines (prescription)
+  // 🔥 get assigned medicines
   loadAssignedMedicines() {
-    this.http.get<any>(
-      `${environment.apiUrl}/api/v1/patients/${this.patientId}`
-    ).subscribe(data => {
+    this.http.get<any>(`${environment.apiUrl}/api/v1/patients/${this.patientId}`)
+      .subscribe({
+        next: (data) => {
+          console.log("Updated Patient:", data);
 
-      console.log("Updated Patient:", data);
-
-      this.assignedMedicines = data.prescription || [];
-    });
+          this.assignedMedicines = data?.prescription || [];
+        },
+        error: (err) => {
+          console.error("Error loading assigned medicines:", err);
+        }
+      });
   }
 
+  // 🔥 select checkbox
   toggleMedicineSelection(medicine: Medicine, event: Event) {
     const isChecked = (event.target as HTMLInputElement).checked;
 
     if (isChecked) {
-      const alreadyExists = this.selectedMedicines.some(m => m.id === medicine.id);
-      if (!alreadyExists) {
+      const exists = this.selectedMedicines.some(m => m.id === medicine.id);
+
+      if (!exists) {
         this.selectedMedicines.push({
           id: medicine.id,
           name: medicine.drugName,
           timeToTake: []
         });
       }
+
     } else {
-      this.selectedMedicines = this.selectedMedicines.filter(m => m.id !== medicine.id);
+      this.selectedMedicines =
+        this.selectedMedicines.filter(m => m.id !== medicine.id);
     }
   }
 
+  // 🔥 update times
   updateSelectedTimes(medicine: Medicine, selectedTimes: string[]) {
-    const selectedMedicine = this.selectedMedicines.find(m => m.id === medicine.id);
-    if (selectedMedicine) {
-      selectedMedicine.timeToTake = selectedTimes;
+    const selected = this.selectedMedicines.find(m => m.id === medicine.id);
+
+    if (selected) {
+      selected.timeToTake = selectedTimes;
     }
   }
 
@@ -96,24 +116,24 @@ export class MedicinelistComponent {
       return;
     }
 
-    for (const medicine of this.selectedMedicines) {
-      if (!medicine.timeToTake || medicine.timeToTake.length === 0) {
-        alert(`Select time for: ${medicine.name}`);
+    for (const m of this.selectedMedicines) {
+      if (!m.timeToTake || m.timeToTake.length === 0) {
+        alert(`Select time for: ${m.name}`);
         return;
       }
     }
 
-    const medicinesWithTime = this.selectedMedicines.map(m => ({
+    const payload = this.selectedMedicines.map(m => ({
       medicineName: m.name,
       timeToTake: m.timeToTake
     }));
 
     console.log("Patient ID:", this.patientId);
-    console.log("Payload:", medicinesWithTime);
+    console.log("Payload:", payload);
 
     this.http.put(
       `${environment.apiUrl}/api/v1/patients/${this.patientId}/add-medicine`,
-      medicinesWithTime,
+      payload,
       { responseType: 'text' }
     ).subscribe({
       next: () => {
@@ -121,7 +141,7 @@ export class MedicinelistComponent {
 
         this.selectedMedicines = [];
 
-        // 🔥 IMPORTANT: reload assigned medicines
+        // 🔥 refresh assigned list
         this.loadAssignedMedicines();
       },
       error: (err) => {
@@ -134,15 +154,22 @@ export class MedicinelistComponent {
   // 🔥 delete medicine
   delete(id: number) {
     this.http.delete(`${environment.apiUrl}/api/v3/medicines/${id}`)
-      .subscribe(() => {
-        this.getMedicine();
+      .subscribe({
+        next: () => {
+          this.getMedicine();
+        },
+        error: (err) => {
+          console.error(err);
+        }
       });
   }
 
+  // 🔥 update page
   update(id: number) {
     this.router.navigate(['update-medicine', id]);
   }
 
+  // 🔥 helper
   getSelectedMedicine(medicine: Medicine) {
     return this.selectedMedicines.find(m => m.id === medicine.id);
   }

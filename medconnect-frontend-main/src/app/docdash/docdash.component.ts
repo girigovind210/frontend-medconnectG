@@ -8,17 +8,13 @@ import { Patient } from '../patient';
   selector: 'app-docdash',
   templateUrl: './docdash.component.html',
   styleUrls: ['./docdash.component.css']
-  
-
 })
 export class DocdashComponent {
 
-  searchQuery: string = ''; // Model for search input
-  patients: Patient[] = [];  // Original list of patients
-  filteredPatients: Patient[] = [];  // Patients filtered by search
+  searchQuery: string = '';
+  patients: Patient[] = [];
+  filteredPatients: Patient[] = [];
   loading: boolean = false;
-
-
 
   constructor(
     private patientService: PatientService,
@@ -30,17 +26,23 @@ export class DocdashComponent {
     this.getPatients();
   }
 
-  // Fetching the patient list from the backend
+  // 🔹 Get all patients
   getPatients(): void {
     this.loading = true;
-    this.patientService.getPatientList().subscribe(data => {
-      this.patients = data;
-      this.filteredPatients = data; // Initially, show all patients
-      this.loading = false;
+    this.patientService.getPatientList().subscribe({
+      next: (data) => {
+        this.patients = data;
+        this.filteredPatients = data;
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error(err);
+        this.loading = false;
+      }
     });
   }
 
-  // Search function to filter patients based on name or ID
+  // 🔹 Search locally
   searchPatient(): void {
     if (this.searchQuery) {
       this.filteredPatients = this.patients.filter(patient =>
@@ -48,38 +50,11 @@ export class DocdashComponent {
         patient.id.toString().includes(this.searchQuery)
       );
     } else {
-      this.filteredPatients = this.patients; // Show all patients if search is cleared
+      this.filteredPatients = this.patients;
     }
   }
 
-  // Update a patient's details
-  update(id: number): void {
-    this.router.navigate(['update-patient', id]);
-  }
-
-  // Delete a patient
-  delete(id: number): void {
-    this.patientService.delete(id).subscribe(data => {
-      console.log(data);
-      this.getPatients(); // Refresh the patient list after deletion
-    });
-  }
-
-  // View a patient's details
-  view(id: number): void {
-    this.router.navigate(['view-patient', id]);
-  }
-
-  // Logout the doctor
-  logout(): void {
-    this.docauth.logout();
-    this.router.navigate(['home']);
-  }
-
-  // Assign medicine to a patient
-  assignMedicine(patientId: number): void {
-    this.router.navigate(['/view-medicine'], { queryParams: { patientId } });
-  }
+  // 🔹 Search API (optional)
   searchPatients(): void {
     const query = this.searchQuery.trim();
     if (query) {
@@ -87,9 +62,37 @@ export class DocdashComponent {
         this.filteredPatients = data;
       });
     } else {
-      this.filteredPatients = this.patients; // fallback to original list if search cleared
+      this.filteredPatients = this.patients;
     }
   }
-  
-  
+
+  // 🔹 Update
+  update(id: number): void {
+    this.router.navigate(['update-patient', id]);
+  }
+
+  // 🔹 Delete
+  delete(id: number): void {
+    this.patientService.delete(id).subscribe(() => {
+      this.getPatients();
+    });
+  }
+
+  // 🔹 View patient
+  view(id: number): void {
+    this.router.navigate(['view-patient', id]);
+  }
+
+  // 🔥 Assign medicine (FINAL FIX)
+  assignMedicine(patientId: number): void {
+    console.log("Clicked Assign for ID:", patientId);
+
+    this.router.navigate(['view-medicine', patientId]); // ✅ correct
+  }
+
+  // 🔹 Logout
+  logout(): void {
+    this.docauth.logout();
+    this.router.navigate(['home']);
+  }
 }
