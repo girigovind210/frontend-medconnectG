@@ -77,11 +77,9 @@ export class DocdashComponent {
   }
 
   // Assign medicine to a patient
- assignMedicine(patientId: number): void {
-  console.log("Clicked Assign for ID:", patientId); // 🔥
-
-  this.router.navigate(['/view-medicine', patientId]);
-}
+  assignMedicine(patientId: number): void {
+    this.router.navigate(['/view-medicine'], { queryParams: { patientId } });
+  }
   searchPatients(): void {
     const query = this.searchQuery.trim();
     if (query) {
