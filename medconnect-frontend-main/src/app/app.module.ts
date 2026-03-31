@@ -35,7 +35,8 @@ import { AssistantLoginComponent } from './assistant-login/assistant-login.compo
   MedicinelistComponent,
   CreateAppointmentComponent,
   DocdashComponent,
-  AssistantLoginComponent
+  AssistantLoginComponent,
+  ViewPatientComponent
 ],
 
   imports: [

@@ -8,8 +8,6 @@ import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-view-patient',
-  standalone: true,   // 👈 जर आहे तर important
-  imports: [FormsModule],  // 🔥 ADD THIS
   templateUrl: './view-patient.component.html',
   styleUrls: ['./view-patient.component.css']
 })
