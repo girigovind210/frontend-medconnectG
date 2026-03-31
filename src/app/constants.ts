@@ -1,1 +1,1 @@
-export const BASE_URL = 'https://medconnect-backend-283p.onrender.com';
+export const BASE_URL = 'https://medconnect-backend-sms3.onrender.com';

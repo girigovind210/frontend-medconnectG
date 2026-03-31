@@ -93,8 +93,8 @@ export class MedicinelistComponent {
   
     console.log('Request Payload:', medicinesWithTime);  // Log the payload
     this.http.put(
-      `https://medconnect-backend-283p.onrender.com/api/v1/patients/${this.patientId}/add-medicine`,
-      medicinesWithTime,
+  `https://medconnect-backend-sms3.onrender.com/api/v1/patients/${this.patientId}/add-medicine`,
+  medicinesWithTime,
       { responseType: 'text' }
     ).subscribe({
       next: (response) => {
@@ -120,7 +120,7 @@ export class MedicinelistComponent {
   }
 
   delete(id: number) {
-    this.http.delete(`https://medconnect-backend-283p.onrender.com/api/v3/medicines/${id}`)
+   this.http.delete(`https://medconnect-backend-sms3.onrender.com/api/v3/medicines/${id}`)
       .subscribe(() => {
         this.getMedicine();
       });
