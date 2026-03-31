@@ -12,7 +12,15 @@ import { environment } from '../../environments/environment';
 export class MedicinelistComponent {
 
   medicines: Medicine[] = [];
-  selectedMedicines: { id: number, name: string, timeToTake: string[] }[] = [];
+
+  selectedMedicines: {
+    id: number,
+    name: string,
+    timeToTake: string[]
+  }[] = [];
+
+  assignedMedicines: any[] = []; // 🔥 assigned medicines store
+
   patientId!: number;
 
   constructor(
@@ -22,23 +30,38 @@ export class MedicinelistComponent {
   ) {}
 
   ngOnInit(): void {
-    //  FIX: Route param 
+
+    // 🔥 get patient id from route
     this.patientId = Number(this.route.snapshot.params['id']);
     console.log("Patient ID:", this.patientId);
 
     if (!this.patientId) {
-      alert("Invalid Patient ID");
+      alert("Invalid Patient ID ❌");
       return;
     }
 
     this.getMedicine();
+    this.loadAssignedMedicines(); // 🔥 load already assigned
   }
 
+  // 🔥 get all medicines
   getMedicine() {
     this.http.get<Medicine[]>(`${environment.apiUrl}/api/v3/medicines`)
       .subscribe(data => {
         this.medicines = data;
       });
+  }
+
+  // 🔥 get assigned medicines (prescription)
+  loadAssignedMedicines() {
+    this.http.get<any>(
+      `${environment.apiUrl}/api/v1/patients/${this.patientId}`
+    ).subscribe(data => {
+
+      console.log("Updated Patient:", data);
+
+      this.assignedMedicines = data.prescription || [];
+    });
   }
 
   toggleMedicineSelection(medicine: Medicine, event: Event) {
@@ -65,6 +88,7 @@ export class MedicinelistComponent {
     }
   }
 
+  // 🔥 assign medicines
   assignSelectedMedicines() {
 
     if (this.selectedMedicines.length === 0) {
@@ -87,19 +111,18 @@ export class MedicinelistComponent {
     console.log("Patient ID:", this.patientId);
     console.log("Payload:", medicinesWithTime);
 
-    // 🔥 FINAL FIX (correct URL + correct ID)
     this.http.put(
       `${environment.apiUrl}/api/v1/patients/${this.patientId}/add-medicine`,
       medicinesWithTime,
       { responseType: 'text' }
     ).subscribe({
-      next: (res) => {
+      next: () => {
         alert("Medicines assigned successfully ✅");
 
         this.selectedMedicines = [];
 
-        // 🔥 reload UI
-        this.getMedicine();
+        // 🔥 IMPORTANT: reload assigned medicines
+        this.loadAssignedMedicines();
       },
       error: (err) => {
         console.error(err);
@@ -108,6 +131,7 @@ export class MedicinelistComponent {
     });
   }
 
+  // 🔥 delete medicine
   delete(id: number) {
     this.http.delete(`${environment.apiUrl}/api/v3/medicines/${id}`)
       .subscribe(() => {
