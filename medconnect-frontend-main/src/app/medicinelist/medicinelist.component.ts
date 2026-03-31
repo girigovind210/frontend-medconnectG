@@ -28,7 +28,7 @@ export class MedicinelistComponent {
   }
 
   getMedicine() {
-    this.http.get<Medicine[]>("https://medconnect-backend-283p.onrender.com/api/v3/medicines")
+   this.http.get<Medicine[]>("https://medconnect-backend-sms3.onrender.com/api/v3/medicines")
     .subscribe(data => {
       this.medicines = data;
     });
