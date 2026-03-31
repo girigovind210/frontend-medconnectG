@@ -25,7 +25,7 @@ export class CreatePatientComponent {
       const patientId = data.id;
 
       // 🔥 navigate with ID
-      this.router.navigate(['/medicinelist', patientId]);
+      this.router.navigate(['/docdash']); 
 
     });
   }

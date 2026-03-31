@@ -32,7 +32,7 @@ export class MedicinelistComponent {
   ngOnInit(): void {
 
     // 🔥 get patient id from route
-    this.patientId = Number(this.route.snapshot.params['id']);
+    this.patientId = Number(this.route.snapshot.params['id']);;
     console.log("Patient ID:", this.patientId);
 
     if (!this.patientId) {
