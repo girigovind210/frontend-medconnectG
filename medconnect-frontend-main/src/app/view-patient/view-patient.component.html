@@ -41,7 +41,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let prescription of patient.prescription || []">
+               <tr *ngFor="let prescription of patient.prescription || []">
   <td>{{ prescription.medicine?.drugName }}</td>
   <td>{{ prescription.timeToTake?.join(', ') }}</td>
 </tr>

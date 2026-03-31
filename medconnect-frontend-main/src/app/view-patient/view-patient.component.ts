@@ -26,11 +26,11 @@ export class ViewPatientComponent {
     this.id = this.route.snapshot.params['id'];
     this.patientService.getPatientById(this.id).subscribe(data => {
       this.patient = data;
-  
-      // Check if prescription is a string (for example, 'Amoxicillin, Crosin')
-      
-  
-      console.log(this.patient.prescription); // Log the transformed structure
+
+// 🔥 FORCE assign prescription
+this.patient.prescription = data.prescription || [];
+
+console.log("Prescription:", this.patient.prescription);
   
       const now = new Date();
       this.currentDateTime = now.toLocaleString();
