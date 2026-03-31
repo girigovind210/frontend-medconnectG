@@ -9,31 +9,27 @@ import { environment } from '../environments/environment';
 export class MedicineService {
 
   constructor(private httpClient:HttpClient) { }
-  private baseUrl = `${environment.apiUrl}/api/v3`;
-  
+ private baseUrl = `${environment.apiUrl}/api/v1`;
 
-  getMedicines():Observable<Medicine[]>
-  {
+getMedicines(): Observable<Medicine[]> {
+  return this.httpClient.get<Medicine[]>(`${this.baseUrl}/medicines`);
+}
 
-    return this.httpClient.get<Medicine[]>(`${this.baseUrl}/medicines`);
-  }
+createMedicine(medicine: Medicine): Observable<Medicine> {
+  return this.httpClient.post<Medicine>(`${this.baseUrl}/medicines`, medicine);
+}
 
-    createMedicine(medicine:Medicine):Observable<Medicine>
-    {
+getMedicineById(id: number): Observable<Medicine> {
+  return this.httpClient.get<Medicine>(`${this.baseUrl}/medicines/${id}`);
+}
 
-      return this.httpClient.post<Medicine>(`${this.baseUrl}/medicines`,medicine);
-    }
-    getMedicineById(id:number):Observable<Medicine>{
+updateMedicine(id: number, medicine: Medicine): Observable<object> {
+  return this.httpClient.put(`${this.baseUrl}/medicines/${id}`, medicine);
+}
 
-      return this.httpClient.get<Medicine>(`${this.baseUrl}/medicines/${id}`);
-    }
-    updateMedicine(id:number,medicine:Medicine):Observable<object>{
-      return this.httpClient.put<Medicine>(`${this.baseUrl}/medicines/${id}`,medicine);
-    }
-
-    delete(id:number):Observable<object>{
-      return this.httpClient.delete(`${this.baseUrl}/medicines/${id}`);
-    }
+delete(id: number): Observable<object> {
+  return this.httpClient.delete(`${this.baseUrl}/medicines/${id}`);
+}
     
 }
 
