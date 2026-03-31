@@ -22,5 +22,11 @@ export class PrescriptionService {
       `${environment.apiUrl}/api/v1/patients/${patientId}/add-medicine`,
       data
     );
+    
   }
+  getPrescriptionsByPatientId(patientId: number): Observable<any[]> {
+  return this.httpClient.get<any[]>(
+    `${this.baseUrl}/${patientId}`
+  );
+}
 }

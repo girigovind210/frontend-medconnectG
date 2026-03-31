@@ -23,17 +23,22 @@ export class ViewPatientComponent {
   ) { }
 
   ngOnInit(): void {
-    this.id = this.route.snapshot.params['id'];
-    this.patientService.getPatientById(this.id).subscribe(data => {
-      this.patient = data;
 
-// 🔥 FORCE assign prescription
-this.patient.prescription = data.prescription || [];
+  this.id = this.route.snapshot.params['id'];
 
-console.log("Prescription:", this.patient.prescription);
-  
-      const now = new Date();
-      this.currentDateTime = now.toLocaleString();
+  // 🔥 1. Load patient details
+  this.patientService.getPatientById(this.id).subscribe(data => {
+    this.patient = data;
+
+    const now = new Date();
+    this.currentDateTime = now.toLocaleString();
+  });
+
+  // 🔥 2. Load prescriptions separately (VERY IMPORTANT)
+  this.prescriptionService.getPrescriptionsByPatientId(this.id)
+    .subscribe(data => {
+      console.log("Prescriptions:", data);
+      this.patient.prescription = data;
     });
 
   }
