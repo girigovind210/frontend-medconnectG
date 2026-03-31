@@ -1,0 +1,14 @@
+<p>assistant-login works!</p>
+<div class="container mt-5">
+  <h3>Assistant Login</h3>
+
+  <input type="text" class="form-control mb-2"
+         placeholder="Username" [(ngModel)]="username">
+
+  <input type="password" class="form-control mb-2"
+         placeholder="Password" [(ngModel)]="password">
+
+  <button class="btn btn-warning" (click)="login()">
+    Login
+  </button>
+</div>

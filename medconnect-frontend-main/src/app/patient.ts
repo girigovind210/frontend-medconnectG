@@ -7,7 +7,7 @@ export class Patient {
     blood:string="";
     prescription: Prescription[] = [];
     dose:string="";
-    fees:string="";
+    fees:number=0;
     urgency:string="";
     phoneNumber: string="";
 

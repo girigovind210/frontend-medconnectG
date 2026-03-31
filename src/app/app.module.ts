@@ -18,6 +18,7 @@ import { UpdateMedicineComponent } from './update-medicine/update-medicine.compo
 import { DocloginComponent } from './doclogin/doclogin.component';
 import { AdloginComponent } from './adlogin/adlogin.component';
 import { PatientDashboardComponent } from './patient-dashboard/patient-dashboard.component';
+import { AssistantLoginComponent } from '../../medconnect-frontend-main/src/app/assistant-login/assistant-login.component';
 
 
 
@@ -35,6 +36,7 @@ import { PatientDashboardComponent } from './patient-dashboard/patient-dashboard
   MedicinelistComponent,
   CreateAppointmentComponent,
   DocdashComponent,
+  AssistantLoginComponent,
 ],
 
   imports: [

@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Patient } from './patient';
 import { environment } from '../environments/environment';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -12,35 +13,46 @@ export class PatientService {
 
   constructor(private httpclient: HttpClient) { }
 
+  // 🔹 Get all patients
   getPatientList(): Observable<Patient[]> {
     return this.httpclient.get<Patient[]>(`${this.baseUrl}`);
   }
 
+  // 🔹 Delete patient
   delete(id: number): Observable<object> {
     return this.httpclient.delete(`${this.baseUrl}/${id}`);
   }
 
+  // 🔹 Create patient (Assistant use)
   createPatient(patient: Patient): Observable<Patient> {
     return this.httpclient.post<Patient>(`${this.baseUrl}`, patient);
   }
 
+  // 🔹 Get patient by ID
   getPatientById(id: number): Observable<Patient> {
     return this.httpclient.get<Patient>(`${this.baseUrl}/${id}`);
   }
 
+  // 🔹 Update patient (general)
   updatePatient(id: number, patient: Patient): Observable<object> {
     return this.httpclient.put(`${this.baseUrl}/${id}`, patient);
   }
 
-  // ✅ NEW METHOD: Send prescription via WhatsApp
+  // 🔥 🔥 IMPORTANT (Doctor adds fees)
+  updateFees(id: number, patient: any): Observable<any> {
+    return this.httpclient.put(
+      `${this.baseUrl}/${id}/fees`,
+      patient
+    );
+  }
+
+  // 🔹 Send prescription (WhatsApp)
   sendPrescription(id: number, request: { phoneNumber: string, message: string }): Observable<any> {
     return this.httpclient.put(`${this.baseUrl}/${id}/send-prescription`, request);
   }
 
-  // patient.service.ts
-searchPatients(query: string): Observable<Patient[]> {
-  return this.httpclient.get<Patient[]>(`${this.baseUrl}/search?query=${query}`);
-}
-
-  
+  // 🔹 Search patients
+  searchPatients(query: string): Observable<Patient[]> {
+    return this.httpclient.get<Patient[]>(`${this.baseUrl}/search?query=${query}`);
+  }
 }

@@ -16,9 +16,11 @@ import { AdloginComponent } from './adlogin/adlogin.component';
 import { AdminauthguardService } from './adminauthguard.service';
 import { DoctorauthguardService } from './doctorauthguard.service';
 import { PatientDashboardComponent } from './patient-dashboard/patient-dashboard.component';
+import { AssistantLoginComponent } from './assistant-login/assistant-login.component';
 
 const routes: Routes = [
   { path: 'view-medicine/:id', component: MedicinelistComponent },
+  
 
   { path: 'patient-dashboard', component: PatientDashboardComponent 
 
@@ -66,7 +68,8 @@ const routes: Routes = [
   },
   {
     path:'adlogin',component:AdloginComponent
-  }
+  },
+  { path: 'assistant-login', component: AssistantLoginComponent }
   
 ];
 
