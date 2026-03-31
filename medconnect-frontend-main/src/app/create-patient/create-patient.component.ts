@@ -15,20 +15,17 @@ export class CreatePatientComponent {
   constructor(private patientService:PatientService,private router:Router){
 
   }
-  savepatient(){
-    this.patientService.createPatient(this.patient).subscribe(data=>{
-      console.log(data);
-      this.goToPatientList();
-    })
-  }
-  onSubmit()
-  {
-     this.savepatient();
-  }
-  goToPatientList(){
+  savepatient() {
+  this.patientService.createPatient(this.patient).subscribe((data: any) => {
+    
+    console.log("Created Patient:", data);
 
-    this.router.navigate(['/docdash'])
-  }
+    const patientId = data.id; // 🔥 IMPORTANT
 
+    // 🔥 Direct medicine page ला जा with ID
+    this.router.navigate(['/medicinelist', patientId]);
+
+  });
+}
   
 }
