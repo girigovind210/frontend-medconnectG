@@ -18,6 +18,7 @@ import { DoctorauthguardService } from './doctorauthguard.service';
 import { PatientDashboardComponent } from './patient-dashboard/patient-dashboard.component';
 
 const routes: Routes = [
+  { path: 'medicinelist/:id', component: MedicinelistComponent },
 
   { path: 'patient-dashboard', component: PatientDashboardComponent 
 

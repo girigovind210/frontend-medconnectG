@@ -2,15 +2,17 @@ import { Component } from '@angular/core';
 import { Medicine } from '../medicine';
 import { Router, ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { environment } from '../../environments/environment';
+
 @Component({
   selector: 'app-medicinelist',
   templateUrl: './medicinelist.component.html',
   styleUrls: ['./medicinelist.component.css']
 })
 export class MedicinelistComponent {
+
   medicines: Medicine[] = [];
-  selectedMedicines: { id: number, name: string, timeToTake: string[] } []=[];  // Added id to the type
+  selectedMedicines: { id: number, name: string, timeToTake: string[] }[] = [];
   patientId!: number;
 
   constructor(
@@ -20,128 +22,104 @@ export class MedicinelistComponent {
   ) {}
 
   ngOnInit(): void {
-    this.patientId = Number(this.route.snapshot.queryParamMap.get('patientId'));
+    //  FIX: Route param 
+    this.patientId = Number(this.route.snapshot.params['id']);
+    console.log("Patient ID:", this.patientId);
+
     if (!this.patientId) {
-      alert("Patient ID is missing.");
+      alert("Invalid Patient ID");
+      return;
     }
+
     this.getMedicine();
   }
 
   getMedicine() {
-   this.http.get<Medicine[]>("https://medconnect-backend-sms3.onrender.com/api/v3/medicines")
-    .subscribe(data => {
-      this.medicines = data;
-    });
+    this.http.get<Medicine[]>(`${environment.apiUrl}/api/v3/medicines`)
+      .subscribe(data => {
+        this.medicines = data;
+      });
   }
 
   toggleMedicineSelection(medicine: Medicine, event: Event) {
     const isChecked = (event.target as HTMLInputElement).checked;
-  
+
     if (isChecked) {
-      // Only add if not already selected
       const alreadyExists = this.selectedMedicines.some(m => m.id === medicine.id);
       if (!alreadyExists) {
         this.selectedMedicines.push({
           id: medicine.id,
           name: medicine.drugName,
-          timeToTake: [] // Wait for selection
+          timeToTake: []
         });
       }
     } else {
-      // Remove from selectedMedicines
       this.selectedMedicines = this.selectedMedicines.filter(m => m.id !== medicine.id);
     }
   }
-  
-  
+
   updateSelectedTimes(medicine: Medicine, selectedTimes: string[]) {
-    // Update the timeToTake for the selected medicine
     const selectedMedicine = this.selectedMedicines.find(m => m.id === medicine.id);
     if (selectedMedicine) {
       selectedMedicine.timeToTake = selectedTimes;
     }
   }
-  
-  
-  
-  
-  
-
-  isSelected(medicine: Medicine): boolean {
-    return !!medicine.isSelected;
-  }
 
   assignSelectedMedicines() {
+
     if (this.selectedMedicines.length === 0) {
       alert("Please select at least one medicine.");
       return;
     }
-  
-    // Make sure each selected medicine has a time assigned
+
     for (const medicine of this.selectedMedicines) {
       if (!medicine.timeToTake || medicine.timeToTake.length === 0) {
-        alert(`Please select at least one time for medicine: ${medicine.name}`);
+        alert(`Select time for: ${medicine.name}`);
         return;
       }
     }
-  
-    // Send selected medicines and their times to the backend
-    const medicinesWithTime = this.selectedMedicines.map(medicine => ({
-      medicineName: medicine.name,
-      timeToTake: medicine.timeToTake
+
+    const medicinesWithTime = this.selectedMedicines.map(m => ({
+      medicineName: m.name,
+      timeToTake: m.timeToTake
     }));
-  
-    console.log('Request Payload:', medicinesWithTime);  // Log the payload
+
+    console.log("Patient ID:", this.patientId);
+    console.log("Payload:", medicinesWithTime);
+
+    // 🔥 FINAL FIX (correct URL + correct ID)
     this.http.put(
-  `https://medconnect-backend-sms3.onrender.com/api/v1/patients/${this.patientId}/add-medicine`,
-  medicinesWithTime,
+      `${environment.apiUrl}/api/v1/patients/${this.patientId}/add-medicine`,
+      medicinesWithTime,
       { responseType: 'text' }
     ).subscribe({
-      next: (response) => {
-        alert(response);
+      next: (res) => {
+        alert("Medicines assigned successfully ✅");
+
         this.selectedMedicines = [];
+
+        // 🔥 reload UI
+        this.getMedicine();
       },
       error: (err) => {
-        console.error('Error assigning medicines:', err);
-        alert('Failed to assign medicines.');
+        console.error(err);
+        alert("Assignment failed ❌");
       }
     });
-
-    const uniqueMedicines = Array.from(
-      new Map(this.selectedMedicines.map(m => [m.id, m])).values()
-    );
-    
-    
-  }
-  
-
-  update(id: number) {
-    this.router.navigate(['update-medicine', id]);
   }
 
   delete(id: number) {
-   this.http.delete(`https://medconnect-backend-sms3.onrender.com/api/v3/medicines/${id}`)
+    this.http.delete(`${environment.apiUrl}/api/v3/medicines/${id}`)
       .subscribe(() => {
         this.getMedicine();
       });
   }
 
+  update(id: number) {
+    this.router.navigate(['update-medicine', id]);
+  }
+
   getSelectedMedicine(medicine: Medicine) {
     return this.selectedMedicines.find(m => m.id === medicine.id);
   }
-  
-
-  
-  updateMultipleTimesToTake(medicine: Medicine, selectedTimes: string[]) {
-    const selected = this.selectedMedicines.find(m => m.id === medicine.id);
-    if (selected) {
-      // Update the selected medicine's timeToTake with the array of selected times
-      selected.timeToTake = selectedTimes;
-    }
-  }
-  
-  
-  
-  
-
 }
