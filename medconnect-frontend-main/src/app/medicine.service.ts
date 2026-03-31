@@ -9,7 +9,7 @@ import { environment } from '../environments/environment';
 export class MedicineService {
 
   constructor(private httpClient:HttpClient) { }
- private baseUrl = `${environment.apiUrl}/api/v1`;
+ private baseUrl = `${environment.apiUrl}/api/v3`;
 
 getMedicines(): Observable<Medicine[]> {
   return this.httpClient.get<Medicine[]>(`${this.baseUrl}/medicines`);
