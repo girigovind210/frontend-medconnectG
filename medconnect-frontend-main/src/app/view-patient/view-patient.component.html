@@ -41,12 +41,25 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let prescription of patient?.prescription">
-              <td>{{ prescription.medicine?.drugName || 'N/A' }}</td>
-              <td>{{ prescription.timeToTake?.join(', ') || prescription.timeToTake }}</td>
-            </tr>
-                
-              </tbody>
+  <tr *ngFor="let prescription of patient?.prescription || []">
+
+    <!-- 🔥 FIXED -->
+    <td>{{ prescription.medicineName || 'N/A' }}</td>
+
+    <!-- 🔥 SAFE TIME DISPLAY -->
+    <td>
+      {{ prescription.timeToTake?.join(', ') || prescription.timeToTake || 'N/A' }}
+    </td>
+
+  </tr>
+
+  <!-- 🔥 EMPTY CASE -->
+  <tr *ngIf="!patient?.prescription || patient.prescription.length === 0">
+    <td colspan="2" class="text-center text-muted">
+      No medicines assigned
+    </td>
+  </tr>
+</tbody>
             </table>
           </td>
         </tr>
