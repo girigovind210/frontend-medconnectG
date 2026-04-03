@@ -2,8 +2,7 @@ import { Component } from '@angular/core';
 import { PatientService } from '../patient.service';
 import { ActivatedRoute } from '@angular/router';
 import { Patient } from '../patient';
-import { PrescriptionService } from '../prescription.service'; // Import PrescriptionService
-import { BASE_URL } from '../constants';  // adjust path as needed
+import { PrescriptionService } from '../prescription.service';
 
 @Component({
   selector: 'app-view-patient',
@@ -14,47 +13,56 @@ export class ViewPatientComponent {
 
   id: number = 0;
   patient: Patient = new Patient();
-  currentDateTime: string = ''; // Declare this property to store the current date and time
+  currentDateTime: string = '';
 
   constructor(
     private patientService: PatientService,
-    private prescriptionService: PrescriptionService, // Use PrescriptionService here
+    private prescriptionService: PrescriptionService,
     private route: ActivatedRoute
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-    this.id = this.route.snapshot.params['id'];
-    this.patientService.getPatientById(this.id).subscribe(data => {
-      this.patient = data;
-  
-      // Check if prescription is a string (for example, 'Amoxicillin, Crosin')
-      
-  
-      console.log(this.patient.prescription); // Log the transformed structure
-  
-      const now = new Date();
-      this.currentDateTime = now.toLocaleString();
+
+    this.id = Number(this.route.snapshot.params['id']);
+
+    this.patientService.getPatientById(this.id).subscribe({
+      next: (data) => {
+
+        console.log("🔥 FULL API RESPONSE:", data);
+
+        this.patient = data;
+
+        // 🔥 IMPORTANT FIX
+        if (!this.patient.prescription) {
+          this.patient.prescription = [];
+        }
+
+        console.log("🔥 PRESCRIPTION:", this.patient.prescription);
+
+        const now = new Date();
+        this.currentDateTime = now.toLocaleString();
+      },
+
+      error: (err) => {
+        console.error("❌ Error loading patient:", err);
+      }
     });
-
   }
-  
-  
-  
-  
 
+  // 🖨️ PRINT
   printPage(): void {
     const printContents = document.getElementById('print-section')?.innerHTML;
     const popupWin = window.open('', '_blank', 'width=800,height=600');
+
     popupWin?.document.open();
     popupWin?.document.write(`
       <html>
         <head>
           <title>Print Prescription</title>
           <style>
-            body { font-family: Arial, sans-serif; padding: 20px; }
-            table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+            body { font-family: Arial; padding: 20px; }
+            table { border-collapse: collapse; width: 100%; }
             th, td { border: 1px solid #ccc; padding: 8px; }
-            h3, h4 { margin-top: 10px; }
           </style>
         </head>
         <body onload="window.print();window.close()">
@@ -65,37 +73,17 @@ export class ViewPatientComponent {
     popupWin?.document.close();
   }
 
+  // 📤 SEND PDF
   sendPrescription(): void {
     this.prescriptionService.sendPrescription(this.patient.id).subscribe({
       next: () => {
-        alert('Prescription PDF sent successfully via WhatsApp!');
+        alert('Prescription sent successfully ✅');
       },
       error: (error) => {
-        console.error('Error sending prescription PDF:', error);
-        alert('Error sending prescription PDF: ' + (error.error || error.message || 'Unknown error'));
+        console.error(error);
+        alert('Failed to send ❌');
       }
     });
   }
-  
-  selectedMedicines: { medicineId: number; timeToTake: string }[] = [];
-
-assignSelectedMedicines() {
-  const patientId = this.route.snapshot.queryParams['patientId'];
-
-  const data = this.selectedMedicines.map(med => ({
-    medicineId: med.medicineId,
-    timeToTake: med.timeToTake
-  }));
-
-  this.prescriptionService.assignMedicines(patientId, data).subscribe({
-    next: () => {
-      alert('Medicines assigned successfully!');
-    },
-    error: (err) => {
-      console.error('Error assigning medicines:', err);
-      alert('Failed to assign medicines.');
-    }
-  });
-}
 
 }
