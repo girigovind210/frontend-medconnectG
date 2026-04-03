@@ -32,15 +32,18 @@ export class ViewPatientComponent {
 
         this.patient = data;
 
-        // 🔥 IMPORTANT FIX
-        if (!this.patient.prescription) {
-          this.patient.prescription = [];
-        }
+        // ✅ SAFE fallback
+        this.patient.prescription = this.patient.prescription || [];
 
         console.log("🔥 PRESCRIPTION:", this.patient.prescription);
 
-        const now = new Date();
-        this.currentDateTime = now.toLocaleString();
+        // 🔥 EXTRA DEBUG (VERY IMPORTANT)
+        if (this.patient.prescription.length > 0) {
+          console.log("🔥 FIRST PRESCRIPTION:", this.patient.prescription[0]);
+          console.log("🔥 MEDICINE OBJECT:", this.patient.prescription[0].medicine);
+        }
+
+        this.currentDateTime = new Date().toLocaleString();
       },
 
       error: (err) => {
@@ -52,6 +55,9 @@ export class ViewPatientComponent {
   // 🖨️ PRINT
   printPage(): void {
     const printContents = document.getElementById('print-section')?.innerHTML;
+
+    if (!printContents) return;
+
     const popupWin = window.open('', '_blank', 'width=800,height=600');
 
     popupWin?.document.open();
@@ -75,6 +81,11 @@ export class ViewPatientComponent {
 
   // 📤 SEND PDF
   sendPrescription(): void {
+    if (!this.patient.id) {
+      alert("Invalid patient ❌");
+      return;
+    }
+
     this.prescriptionService.sendPrescription(this.patient.id).subscribe({
       next: () => {
         alert('Prescription sent successfully ✅');
