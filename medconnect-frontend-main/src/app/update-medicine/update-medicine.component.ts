@@ -2,36 +2,46 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MedicineService } from '../medicine.service';
 import { Medicine } from '../medicine';
-import { BASE_URL } from '../constants';  // adjust path as needed
 
 @Component({
   selector: 'app-update-medicine',
   templateUrl: './update-medicine.component.html',
-  styleUrl: './update-medicine.component.css'
+  styleUrls: ['./update-medicine.component.css']
 })
 export class UpdateMedicineComponent {
 
-medicine:Medicine =new Medicine();
-id:number=0;
-  constructor(private route:ActivatedRoute,private medicineService:MedicineService,private router:Router){}
+  medicine: Medicine = new Medicine();
+  id: number = 0;
 
-  ngOnInit():void{
+  constructor(
+    private route: ActivatedRoute,
+    private medicineService: MedicineService,
+    private router: Router
+  ) {}
 
-    this.id=this.route.snapshot.params['id'];
-    this.medicineService.getMedicineById(this.id).subscribe(data=>{
-      this.medicine=data;
-    })
+  ngOnInit(): void {
+    this.id = Number(this.route.snapshot.params['id']);
+
+    this.medicineService.getMedicineById(this.id).subscribe(data => {
+      this.medicine = data;
+    });
   }
 
-  onSubmit()
-  {
-    this.medicineService.updateMedicine(this.id,this.medicine).subscribe(data=>{
-      console.log(data);
-      this.goToMedicine();
-    })
+  onSubmit() {
+    this.medicineService.updateMedicine(this.id, this.medicine).subscribe({
+      next: () => {
+        console.log("Updated successfully");
+        this.goToMedicine();
+      },
+      error: (err) => {
+        console.error(err);
+        alert("Update failed ❌");
+      }
+    });
   }
-  goToMedicine(){
 
-    this.router.navigate(['view-medicine'])
+  // 🔥 FIX: no patientId needed
+  goToMedicine() {
+    this.router.navigate(['docdash']); // ✅ safe redirect
   }
 }
