@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { PatientService } from '../patient.service';
 import { ActivatedRoute } from '@angular/router';
-import { Patient } from '../patient';
+import { PatientService } from '../patient.service';
 import { PrescriptionService } from '../prescription.service';
+import { Patient } from '../patient';
 
 @Component({
   selector: 'app-view-patient',
@@ -22,80 +22,92 @@ export class ViewPatientComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-
+    // 1. URL madhun Patient ID ghyava
     this.id = Number(this.route.snapshot.params['id']);
+    
+    // 2. Patient Data Load kara
+    this.loadPatientData();
 
+    // 3. Current Date set kara
+    this.currentDateTime = new Date().toLocaleString();
+  }
+
+  /**
+   * API kadun patient chi mahiti ani prescription ghenyasathi
+   */
+  loadPatientData(): void {
     this.patientService.getPatientById(this.id).subscribe({
       next: (data: any) => {
+        console.log("🔥 API Response Received:", data);
 
-        console.log("🔥 FULL API RESPONSE:", data);
-
-        // ✅ FORCE NEW OBJECT (change detection)
+        // Patient object assign kara
         this.patient = { ...data };
 
-        // 🔥 FINAL FIX (VERY IMPORTANT)
-        this.patient.prescription = Array.isArray(data.prescription)
-          ? data.prescription
-          : [];
-
-        console.log("🔥 PRESCRIPTION:", this.patient.prescription);
-
-        if (this.patient.prescription.length > 0) {
-          console.log("🔥 FIRST:", this.patient.prescription[0]);
+        // Prescription array check ani fix kara (जर data null asel tar empty array dya)
+        if (data.prescription && Array.isArray(data.prescription)) {
+          this.patient.prescription = data.prescription;
+        } else {
+          this.patient.prescription = [];
         }
 
-        this.currentDateTime = new Date().toLocaleString();
+        console.log("✅ Prescription Loaded:", this.patient.prescription);
       },
-
       error: (err) => {
-        console.error("❌ Error loading patient:", err);
+        console.error("❌ Error loading patient data:", err);
+        alert("Patient data load karta yet nahiye!");
       }
     });
   }
 
-  // 🖨️ PRINT
+  /**
+   * Prescription Print karnyachi logic
+   */
   printPage(): void {
-
     const printContents = document.getElementById('print-section')?.innerHTML;
-    if (!printContents) return;
+    
+    if (!printContents) {
+      alert("Print karnyasathi content sapdla nahi!");
+      return;
+    }
 
-    const popupWin = window.open('', '_blank', 'width=800,height=600');
-
+    const popupWin = window.open('', '_blank', 'top=0,left=0,height=100%,width=auto');
+    
     popupWin?.document.open();
     popupWin?.document.write(`
       <html>
         <head>
-          <title>Print Prescription</title>
+          <title>Medical Prescription - MedConnect</title>
+          <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
           <style>
-            body { font-family: Arial; padding: 20px; }
-            table { border-collapse: collapse; width: 100%; }
-            th, td { border: 1px solid #ccc; padding: 8px; }
+            body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 30px; }
+            .table-bordered th, .table-bordered td { border: 1px solid #dee2e6 !important; }
+            @media print { .no-print { display: none; } }
           </style>
         </head>
-        <body onload="window.print();window.close()">
+        <body onload="window.print(); window.close();">
           ${printContents}
         </body>
       </html>
     `);
-
     popupWin?.document.close();
   }
 
-  // 📤 SEND
+  /**
+   * Patient la prescription pathvnya sathi
+   */
   sendPrescription(): void {
-
     if (!this.patient?.id) {
-      alert("Invalid patient ❌");
+      alert("Invalid Patient ID! ❌");
       return;
     }
 
     this.prescriptionService.sendPrescription(this.patient.id).subscribe({
-      next: () => {
-        alert('Prescription sent successfully ✅');
+      next: (res) => {
+        alert('Prescription successfully sent to patient! ✅');
       },
       error: (error) => {
-        console.error(error);
-        alert('Failed to send ❌');
+        console.error("Error sending prescription:", error);
+        alert('Failed to send prescription. Please try again. ❌');
       }
     });
   }
