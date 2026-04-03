@@ -23,30 +23,27 @@ export class ViewPatientComponent implements OnInit {
 
   ngOnInit(): void {
 
-    // ✅ GET ID
     this.id = Number(this.route.snapshot.params['id']);
 
-    // ✅ API CALL
     this.patientService.getPatientById(this.id).subscribe({
-      next: (data) => {
+      next: (data: any) => {
 
         console.log("🔥 FULL API RESPONSE:", data);
 
-        // 🔥 IMPORTANT FIX (change detection safe copy)
+        // ✅ FORCE NEW OBJECT (change detection)
         this.patient = { ...data };
 
-        // ✅ SAFE FALLBACK
-        this.patient.prescription = this.patient.prescription || [];
+        // 🔥 FINAL FIX (VERY IMPORTANT)
+        this.patient.prescription = Array.isArray(data.prescription)
+          ? data.prescription
+          : [];
 
         console.log("🔥 PRESCRIPTION:", this.patient.prescription);
 
-        // 🔍 DEBUG
         if (this.patient.prescription.length > 0) {
-          console.log("🔥 FIRST PRESCRIPTION:", this.patient.prescription[0]);
-          console.log("🔥 MEDICINE OBJECT:", this.patient.prescription[0]?.medicine);
+          console.log("🔥 FIRST:", this.patient.prescription[0]);
         }
 
-        // ✅ DATE TIME
         this.currentDateTime = new Date().toLocaleString();
       },
 
@@ -60,7 +57,6 @@ export class ViewPatientComponent implements OnInit {
   printPage(): void {
 
     const printContents = document.getElementById('print-section')?.innerHTML;
-
     if (!printContents) return;
 
     const popupWin = window.open('', '_blank', 'width=800,height=600');
@@ -85,7 +81,7 @@ export class ViewPatientComponent implements OnInit {
     popupWin?.document.close();
   }
 
-  // 📤 SEND PRESCRIPTION
+  // 📤 SEND
   sendPrescription(): void {
 
     if (!this.patient?.id) {
@@ -103,5 +99,4 @@ export class ViewPatientComponent implements OnInit {
       }
     });
   }
-
 }
