@@ -4,68 +4,80 @@
     <img src="https://medconnect-frontend-1.onrender.com/assets/medconnect2-logo.png" alt="MedConnect logo" width="120">
     <p><strong>Date & Time:</strong> {{ currentDateTime }}</p>
   </div>
+
   <div class="card shadow-lg p-4 mt-4">
     <h4 class="text-center text-primary mb-4">Patient Prescription Details</h4>
   
-    <table class="table table-hover table-striped table-bordered">
+    <table *ngIf="patient" class="table table-hover table-striped table-bordered">
       <tbody>
+
         <tr>
           <th class="bg-light text-secondary">ID</th>
           <td>{{ patient.id }}</td>
         </tr>
+
         <tr>
           <th class="bg-light text-secondary">Name</th>
           <td>{{ patient.name }}</td>
         </tr>
+
         <tr>
           <th class="bg-light text-secondary">Age</th>
           <td>{{ patient.age }}</td>
         </tr>
+
         <tr>
           <th class="bg-light text-secondary">Blood Group</th>
           <td>{{ patient.blood }}</td>
         </tr>
+
         <tr>
           <th class="bg-light text-secondary">Dose</th>
           <td>{{ patient.dose }}</td>
         </tr>
+
+        <!-- 🔥 PRESCRIPTION -->
         <tr>
           <th class="bg-light text-secondary">Prescription</th>
           <td>
-            <!-- Medicine and Time Table -->
+
             <table class="table table-bordered">
               <thead>
                 <tr>
-                  <th class="bg-light text-secondary">Medicine Name</th>
-                  <th class="bg-light text-secondary">Time to Take</th>
+                  <th>Medicine Name</th>
+                  <th>Time to Take</th>
                 </tr>
               </thead>
+
               <tbody>
-  <tbody>
-  <tr *ngFor="let p of patient?.prescription || []">
+                <tr *ngFor="let p of patient?.prescription || []">
 
-    <!-- ✅ MEDICINE -->
-    <td>{{ p.medicine?.drugName }}</td>
+                  <!-- ✅ MEDICINE -->
+                  <td>{{ p?.medicine?.drugName || 'N/A' }}</td>
 
-    <!-- ✅ TIME -->
-    <td>{{ p.timeToTake?.join(', ') }}</td>
+                  <!-- ✅ TIME -->
+                  <td>{{ p?.timeToTake?.join(', ') || 'N/A' }}</td>
 
-  </tr>
+                </tr>
 
-  <!-- EMPTY CASE -->
-  <tr *ngIf="!patient?.prescription || patient.prescription.length === 0">
-    <td colspan="2" class="text-center text-muted">
-      No medicines assigned
-    </td>
-  </tr>
-</tbody>
+                <!-- EMPTY -->
+                <tr *ngIf="!patient?.prescription || patient.prescription.length === 0">
+                  <td colspan="2" class="text-center text-muted">
+                    No medicines assigned
+                  </td>
+                </tr>
+
+              </tbody>
             </table>
+
           </td>
         </tr>
+
         <tr>
           <th class="bg-light text-secondary">Fees</th>
           <td>{{ patient.fees }}</td>
         </tr>
+
       </tbody>
     </table>
   </div>
@@ -79,6 +91,7 @@
 <div class="text-center mt-3">
   <button class="btn btn-outline-dark" (click)="printPage()">🖨️ Print Prescription</button>
 </div>
+
 <div class="text-center mt-3">
   <button (click)="sendPrescription()" class="btn btn-success mt-2">
     Send Prescription To Patient
