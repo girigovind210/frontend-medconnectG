@@ -57,18 +57,15 @@
 
       <tbody>
 
-        <!-- ✅ SAFE LOOP -->
-        <tr *ngFor="let p of (patient?.prescription || [])">
+        <tr *ngFor="let p of prescriptions">
 
           <td>{{ p?.medicine?.drugName }}</td>
 
-          <!-- ✅ FIXED -->
           <td>{{ p?.timeToTake?.join(', ') }}</td>
 
         </tr>
 
-        <!-- EMPTY -->
-        <tr *ngIf="(patient?.prescription || []).length === 0">
+        <tr *ngIf="prescriptions.length === 0">
           <td colspan="2" class="text-center">
             No medicines assigned
           </td>
