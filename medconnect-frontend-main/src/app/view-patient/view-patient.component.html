@@ -41,17 +41,18 @@
                 </tr>
               </thead>
               <tbody>
+  <tbody>
   <tr *ngFor="let p of patient?.prescription || []">
 
-    <!-- ✅ CORRECT -->
-    <td>{{ p.medicine?.drugName || 'N/A' }}</td>
+    <!-- ✅ MEDICINE -->
+    <td>{{ p.medicine?.drugName }}</td>
 
     <!-- ✅ TIME -->
-    <td>{{ p.timeToTake?.join(', ') || 'N/A' }}</td>
+    <td>{{ p.timeToTake?.join(', ') }}</td>
 
   </tr>
 
-  <!-- EMPTY -->
+  <!-- EMPTY CASE -->
   <tr *ngIf="!patient?.prescription || patient.prescription.length === 0">
     <td colspan="2" class="text-center text-muted">
       No medicines assigned
