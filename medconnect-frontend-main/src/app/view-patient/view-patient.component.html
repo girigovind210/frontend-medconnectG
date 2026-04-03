@@ -42,44 +42,44 @@
       </tr>
 
       <!-- 🔥 PRESCRIPTION -->
-      <tr>
-        <th>Prescription</th>
-        <td>
+    <tr>
+  <th>Prescription</th>
+  <td>
 
-          <table class="table table-bordered">
+    <table class="table table-bordered">
 
-            <thead>
-              <tr>
-                <th>Medicine Name</th>
-                <th>Time to Take</th>
-              </tr>
-            </thead>
+      <thead>
+        <tr>
+          <th>Medicine Name</th>
+          <th>Time to Take</th>
+        </tr>
+      </thead>
 
-            <tbody>
+      <tbody>
 
-              <!-- ✅ MAIN LOOP -->
-              <tr *ngFor="let p of patient?.prescription">
+        <!-- ✅ SAFE LOOP -->
+        <tr *ngFor="let p of (patient?.prescription || [])">
 
-                <td>{{ p?.medicine?.drugName }}</td>
+          <td>{{ p?.medicine?.drugName }}</td>
 
-                <td>{{ p?.timeToTake?.join(', ') }}</td>
+          <!-- ✅ FIXED -->
+          <td>{{ p?.timeToTake?.join(', ') }}</td>
 
-              </tr>
+        </tr>
 
-              <!-- EMPTY -->
-              <tr *ngIf="!patient?.prescription || patient.prescription.length === 0">
-                <td colspan="2" class="text-center text-muted">
-                  No medicines assigned
-                </td>
-              </tr>
+        <!-- EMPTY -->
+        <tr *ngIf="(patient?.prescription || []).length === 0">
+          <td colspan="2" class="text-center">
+            No medicines assigned
+          </td>
+        </tr>
 
-            </tbody>
+      </tbody>
 
-          </table>
+    </table>
 
-        </td>
-      </tr>
-
+  </td>
+</tr>
       <tr>
         <th>Fees</th>
         <td>{{ patient?.fees }}</td>
