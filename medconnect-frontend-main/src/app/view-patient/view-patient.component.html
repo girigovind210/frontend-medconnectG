@@ -1,44 +1,49 @@
 <!-- 🖨️ Printable Area -->
 <div class="container mt-3" id="print-section">
+
   <div class="text-center mb-3">
-    <img src="https://medconnect-frontend-1.onrender.com/assets/medconnect2-logo.png" alt="MedConnect logo" width="120">
+    <img src="https://medconnect-frontend-1.onrender.com/assets/medconnect2-logo.png"
+         alt="MedConnect logo" width="120">
     <p><strong>Date & Time:</strong> {{ currentDateTime }}</p>
   </div>
 
   <div class="card shadow-lg p-4 mt-4">
-    <h4 class="text-center text-primary mb-4">Patient Prescription Details</h4>
-  
-    <table *ngIf="patient" class="table table-hover table-striped table-bordered">
+    <h4 class="text-center text-primary mb-4">
+      Patient Prescription Details
+    </h4>
+
+    <table class="table table-hover table-striped table-bordered" *ngIf="patient">
+
       <tbody>
 
         <tr>
-          <th class="bg-light text-secondary">ID</th>
+          <th>ID</th>
           <td>{{ patient.id }}</td>
         </tr>
 
         <tr>
-          <th class="bg-light text-secondary">Name</th>
+          <th>Name</th>
           <td>{{ patient.name }}</td>
         </tr>
 
         <tr>
-          <th class="bg-light text-secondary">Age</th>
+          <th>Age</th>
           <td>{{ patient.age }}</td>
         </tr>
 
         <tr>
-          <th class="bg-light text-secondary">Blood Group</th>
+          <th>Blood Group</th>
           <td>{{ patient.blood }}</td>
         </tr>
 
         <tr>
-          <th class="bg-light text-secondary">Dose</th>
+          <th>Dose</th>
           <td>{{ patient.dose }}</td>
         </tr>
 
-        <!-- 🔥 PRESCRIPTION -->
+        <!-- 🔥 PRESCRIPTION SECTION -->
         <tr>
-          <th class="bg-light text-secondary">Prescription</th>
+          <th>Prescription</th>
           <td>
 
             <table class="table table-bordered">
@@ -50,18 +55,19 @@
               </thead>
 
               <tbody>
-                <tr *ngFor="let p of patient?.prescription || []">
 
-                  <!-- ✅ MEDICINE -->
-                  <td>{{ p?.medicine?.drugName || 'N/A' }}</td>
+                <!-- ✅ FORCE SAFE LOOP -->
+                <tr *ngFor="let p of patient.prescription; let i = index">
 
-                  <!-- ✅ TIME -->
-                  <td>{{ p?.timeToTake?.join(', ') || 'N/A' }}</td>
+                  <!-- 🔥 FINAL FIX -->
+                  <td>{{ p?.medicine?.drugName }}</td>
+
+                  <td>{{ p?.timeToTake?.join(', ') }}</td>
 
                 </tr>
 
                 <!-- EMPTY -->
-                <tr *ngIf="!patient?.prescription || patient.prescription.length === 0">
+                <tr *ngIf="!patient.prescription || patient.prescription.length === 0">
                   <td colspan="2" class="text-center text-muted">
                     No medicines assigned
                   </td>
@@ -74,22 +80,27 @@
         </tr>
 
         <tr>
-          <th class="bg-light text-secondary">Fees</th>
+          <th>Fees</th>
           <td>{{ patient.fees }}</td>
         </tr>
 
       </tbody>
+
     </table>
+
   </div>
-  
+
   <h4>Dr. Kadam</h4>
   <p>(BHMS) Bachelor of Homeopathic Medicine and Surgery</p>
   <p>Phone: +91 9699-590-048</p>
+
 </div>
 
 <!-- 🖨️ Print Button -->
 <div class="text-center mt-3">
-  <button class="btn btn-outline-dark" (click)="printPage()">🖨️ Print Prescription</button>
+  <button class="btn btn-outline-dark" (click)="printPage()">
+    🖨️ Print Prescription
+  </button>
 </div>
 
 <div class="text-center mt-3">
