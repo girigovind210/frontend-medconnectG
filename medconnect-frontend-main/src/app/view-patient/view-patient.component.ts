@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { PatientService } from '../patient.service';
 import { ActivatedRoute } from '@angular/router';
 import { Patient } from '../patient';
@@ -9,7 +9,7 @@ import { PrescriptionService } from '../prescription.service';
   templateUrl: './view-patient.component.html',
   styleUrls: ['./view-patient.component.css']
 })
-export class ViewPatientComponent {
+export class ViewPatientComponent implements OnInit {
 
   id: number = 0;
   patient: Patient = new Patient();
@@ -23,26 +23,30 @@ export class ViewPatientComponent {
 
   ngOnInit(): void {
 
+    // ✅ GET ID
     this.id = Number(this.route.snapshot.params['id']);
 
+    // ✅ API CALL
     this.patientService.getPatientById(this.id).subscribe({
       next: (data) => {
 
         console.log("🔥 FULL API RESPONSE:", data);
 
-        this.patient = data;
+        // 🔥 IMPORTANT FIX (change detection safe copy)
+        this.patient = { ...data };
 
-        // ✅ SAFE fallback
+        // ✅ SAFE FALLBACK
         this.patient.prescription = this.patient.prescription || [];
 
         console.log("🔥 PRESCRIPTION:", this.patient.prescription);
 
-        // 🔥 EXTRA DEBUG (VERY IMPORTANT)
+        // 🔍 DEBUG
         if (this.patient.prescription.length > 0) {
           console.log("🔥 FIRST PRESCRIPTION:", this.patient.prescription[0]);
-          console.log("🔥 MEDICINE OBJECT:", this.patient.prescription[0].medicine);
+          console.log("🔥 MEDICINE OBJECT:", this.patient.prescription[0]?.medicine);
         }
 
+        // ✅ DATE TIME
         this.currentDateTime = new Date().toLocaleString();
       },
 
@@ -54,6 +58,7 @@ export class ViewPatientComponent {
 
   // 🖨️ PRINT
   printPage(): void {
+
     const printContents = document.getElementById('print-section')?.innerHTML;
 
     if (!printContents) return;
@@ -76,12 +81,14 @@ export class ViewPatientComponent {
         </body>
       </html>
     `);
+
     popupWin?.document.close();
   }
 
-  // 📤 SEND PDF
+  // 📤 SEND PRESCRIPTION
   sendPrescription(): void {
-    if (!this.patient.id) {
+
+    if (!this.patient?.id) {
       alert("Invalid patient ❌");
       return;
     }
