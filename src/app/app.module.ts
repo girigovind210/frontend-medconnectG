@@ -19,36 +19,30 @@ import { DocloginComponent } from './doclogin/doclogin.component';
 import { AdloginComponent } from './adlogin/adlogin.component';
 import { PatientDashboardComponent } from './patient-dashboard/patient-dashboard.component';
 
-
-
 @NgModule({
   declarations: [
-  AppComponent,
-  HomeComponent,
-  PatientDashboardComponent,
-  AdloginComponent,
-  DocloginComponent,
-  CreatePatientComponent,
-  UpdatePatientComponent,
-  CreateMedicineComponent,
-  UpdateMedicineComponent,
-  MedicinelistComponent,
-  CreateAppointmentComponent,
-  DocdashComponent,
-],
-
+    AppComponent,
+    HomeComponent,
+    PatientDashboardComponent,
+    AdloginComponent,
+    DocloginComponent,
+    CreatePatientComponent,
+    UpdatePatientComponent,
+    CreateMedicineComponent,
+    UpdateMedicineComponent,
+    MedicinelistComponent,
+    CreateAppointmentComponent,
+    DocdashComponent,
+    ViewPatientComponent,
+    AppointmentComponent
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     FormsModule
   ],
+  providers: [],   // ✅ EMPTY (IMPORTANT)
   bootstrap: [AppComponent]
 })
 export class AppModule { }
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { authInterceptor } from './auth.interceptor';
-
-providers: [
-  { provide: HTTP_INTERCEPTORS, useValue: authInterceptor, multi: true }
-]
