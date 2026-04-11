@@ -11,7 +11,9 @@ import { PrescriptionService } from '../prescription.service';
 export class ViewPatientComponent implements OnInit {
 
   id: number = 0;
-  patient: any = {};
+  patient: any = {
+    prescription: []
+  };
   currentDateTime: string = '';
 
   constructor(
@@ -22,25 +24,40 @@ export class ViewPatientComponent implements OnInit {
 
   ngOnInit(): void {
     this.id = Number(this.route.snapshot.params['id']);
-    this.loadPatientData();
     this.currentDateTime = new Date().toLocaleString();
+
+    this.loadPatientDetails();
+    this.loadPrescription(); // 🔥 important
   }
 
-  loadPatientData(): void {
+  // 👤 Load patient basic info
+  loadPatientDetails(): void {
     this.patientService.getPatientById(this.id).subscribe({
       next: (data: any) => {
-        console.log("🔥 API Response:", data);
-
         this.patient = {
-          ...data,
-          prescription: data.prescription ? [...data.prescription] : []
+          ...this.patient,
+          ...data
         };
+      },
+      error: (err) => {
+        console.error("❌ Patient Error:", err);
+      }
+    });
+  }
+
+  // 💊 Load prescription (MAIN FIX)
+  loadPrescription(): void {
+    this.prescriptionService.getPrescriptionsByPatientId(this.id).subscribe({
+      next: (data: any[]) => {
+        console.log("💊 Prescription API:", data);
+
+        this.patient.prescription = data ? [...data] : [];
 
         console.log("✅ Final Prescription:", this.patient.prescription);
       },
       error: (err) => {
-        console.error("❌ Error:", err);
-        alert("Patient data not loaded!");
+        console.error("❌ Prescription Error:", err);
+        this.patient.prescription = [];
       }
     });
   }
