@@ -30,23 +30,21 @@
               </tr>
             </thead>
 
-            <!-- ✅ DATA SHOW -->
-            <tbody *ngIf="patient?.prescription?.length > 0; else noData">
-              <tr *ngFor="let p of patient.prescription">
-                <td>{{ p.medicine?.drugName }}</td>
-                <td>{{ p.dosage }}</td>
-                <td>{{ p.timeToTake?.join(', ') }}</td>
+            <!-- ✅ ALWAYS RENDER -->
+            <tbody>
+              <tr *ngFor="let p of patient?.prescription || []">
+                <td>{{ p?.medicine?.drugName }}</td>
+                <td>{{ p?.dosage }}</td>
+                <td>{{ p?.timeToTake?.join(', ') }}</td>
               </tr>
-            </tbody>
 
-            <!-- ❌ NO DATA -->
-            <ng-template #noData>
-              <tr>
+              <!-- fallback -->
+              <tr *ngIf="!patient?.prescription || patient.prescription.length === 0">
                 <td colspan="3" class="text-center">
                   No medicines assigned
                 </td>
               </tr>
-            </ng-template>
+            </tbody>
 
           </table>
         </td>
