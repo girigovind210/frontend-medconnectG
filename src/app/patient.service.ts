@@ -24,14 +24,11 @@ export class PatientService {
   }
 
   // 🔹 Create patient (Assistant use)
-  createPatient(patient: any) {
-  return this.httpclient.post(
-    `${environment.apiUrl}/api/v1/patients`,
-    patient
-  );
-}
+  createPatient(patient: Patient): Observable<Patient> {
+    return this.httpclient.post<Patient>(`${this.baseUrl}`, patient);
+  }
 
-  // 🔹 Get patient by IDs
+  // 🔹 Get patient by ID
   getPatientById(id: number): Observable<Patient> {
     return this.httpclient.get<Patient>(`${this.baseUrl}/${id}`);
   }
