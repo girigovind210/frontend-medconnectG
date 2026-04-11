@@ -27,16 +27,11 @@ export class PatientService {
   createPatient(patient: any) {
   return this.httpclient.post(
     `${environment.apiUrl}/api/v1/patients`,
-      // 🔥 IMPORTANT
-    {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }
+    patient
   );
 }
 
-  // 🔹 Get patient by ID
+  // 🔹 Get patient by IDs
   getPatientById(id: number): Observable<Patient> {
     return this.httpclient.get<Patient>(`${this.baseUrl}/${id}`);
   }
