@@ -1,0 +1,67 @@
+<div class="container mt-3" id="print-section">
+
+  <div class="text-center mb-3">
+    <img src="https://medconnect-frontend-1.onrender.com/assets/medconnect2-logo.png"
+         alt="logo" width="120">
+    <p><strong>Date & Time:</strong> {{ currentDateTime }}</p>
+  </div>
+
+  <div class="card shadow-lg p-4 mt-4">
+    <h4 class="text-center text-primary mb-4">
+      Patient Prescription Details
+    </h4>
+
+    <table class="table table-bordered">
+      <tr><th>ID</th><td>{{ patient?.id }}</td></tr>
+      <tr><th>Name</th><td>{{ patient?.name }}</td></tr>
+      <tr><th>Age</th><td>{{ patient?.age }}</td></tr>
+      <tr><th>Blood Group</th><td>{{ patient?.blood }}</td></tr>
+      <tr><th>Dose</th><td>{{ patient?.dose }}</td></tr>
+
+      <tr>
+        <th>Prescription</th>
+        <td>
+          <table class="table table-bordered table-sm">
+            <thead>
+              <tr>
+                <th>Medicine</th>
+                <th>Dosage</th>
+                <th>Time</th>
+              </tr>
+            </thead>
+
+            <!-- ✅ DATA SHOW -->
+            <tbody *ngIf="patient?.prescription?.length > 0; else noData">
+              <tr *ngFor="let p of patient.prescription">
+                <td>{{ p.medicine?.drugName }}</td>
+                <td>{{ p.dosage }}</td>
+                <td>{{ p.timeToTake?.join(', ') }}</td>
+              </tr>
+            </tbody>
+
+            <!-- ❌ NO DATA -->
+            <ng-template #noData>
+              <tr>
+                <td colspan="3" class="text-center">
+                  No medicines assigned
+                </td>
+              </tr>
+            </ng-template>
+
+          </table>
+        </td>
+      </tr>
+
+      <tr>
+        <th>Fees</th>
+        <td class="text-success fw-bold">₹ {{ patient?.fees }}</td>
+      </tr>
+    </table>
+  </div>
+
+</div>
+
+<div class="text-center mt-3">
+  <button class="btn btn-dark mx-2" (click)="printPage()">Print</button>
+  <button class="btn btn-success" (click)="sendPrescription()">Send</button>
+</div>
