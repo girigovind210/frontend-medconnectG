@@ -26,38 +26,32 @@ export class ViewPatientComponent implements OnInit {
     this.id = Number(this.route.snapshot.params['id']);
     this.currentDateTime = new Date().toLocaleString();
 
-    this.loadPatientDetails();
-    this.loadPrescription(); // 🔥 important
+    this.loadPatientAndPrescription(); // ✅ single flow
   }
 
-  // 👤 Load patient basic info
-  loadPatientDetails(): void {
+  // ✅ FIXED METHOD (MAIN LOGIC)
+  loadPatientAndPrescription(): void {
     this.patientService.getPatientById(this.id).subscribe({
       next: (data: any) => {
         this.patient = {
-          ...this.patient,
-          ...data
+          ...data,
+          prescription: []
         };
+
+        // 🔥 Load prescription AFTER patient loads
+        this.prescriptionService.getPrescriptionsByPatientId(this.id).subscribe({
+          next: (prescriptions: any[]) => {
+            console.log("💊 Prescription:", prescriptions);
+            this.patient.prescription = prescriptions || [];
+          },
+          error: (err) => {
+            console.error("❌ Prescription Error:", err);
+            this.patient.prescription = [];
+          }
+        });
       },
       error: (err) => {
         console.error("❌ Patient Error:", err);
-      }
-    });
-  }
-
-  // 💊 Load prescription (MAIN FIX)
-  loadPrescription(): void {
-    this.prescriptionService.getPrescriptionsByPatientId(this.id).subscribe({
-      next: (data: any[]) => {
-        console.log("💊 Prescription API:", data);
-
-        this.patient.prescription = data ? [...data] : [];
-
-        console.log("✅ Final Prescription:", this.patient.prescription);
-      },
-      error: (err) => {
-        console.error("❌ Prescription Error:", err);
-        this.patient.prescription = [];
       }
     });
   }
