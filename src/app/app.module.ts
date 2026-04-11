@@ -46,3 +46,9 @@ import { PatientDashboardComponent } from './patient-dashboard/patient-dashboard
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { authInterceptor } from './auth.interceptor';
+
+providers: [
+  { provide: HTTP_INTERCEPTORS, useValue: authInterceptor, multi: true }
+]
