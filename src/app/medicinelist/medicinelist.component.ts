@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Medicine } from '../medicine';
 import { Router, ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -9,7 +9,7 @@ import { environment } from '../../environments/environment';
   templateUrl: './medicinelist.component.html',
   styleUrls: ['./medicinelist.component.css']
 })
-export class MedicinelistComponent {
+export class MedicinelistComponent implements OnInit {
 
   medicines: Medicine[] = [];
 
@@ -24,15 +24,19 @@ export class MedicinelistComponent {
   patientId!: number;
   loading: boolean = false;
 
+  // 🔥 NEW
+  symptoms: string = '';
+  diagnosis: string = '';
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private http: HttpClient
   ) {}
 
+  // ✅ SINGLE ngOnInit (FIXED)
   ngOnInit(): void {
 
-    // 🔥 FIX: always parse safely
     this.patientId = Number(this.route.snapshot.params['id']);
 
     console.log("Patient ID:", this.patientId);
@@ -44,6 +48,9 @@ export class MedicinelistComponent {
 
     this.getMedicine();
     this.loadAssignedMedicines();
+
+    // 🔥 AUTO-FILL LAST VISIT
+    this.loadLastData();
   }
 
   // 🔥 get all medicines
@@ -63,19 +70,33 @@ export class MedicinelistComponent {
       });
   }
 
-  // 🔥 get assigned medicines
+  // 🔥 load assigned medicines
   loadAssignedMedicines() {
     this.http.get<any>(`${environment.apiUrl}/api/v1/patients/${this.patientId}`)
       .subscribe({
         next: (data) => {
           console.log("Updated Patient:", data);
-
           this.assignedMedicines = data?.prescription || [];
         },
         error: (err) => {
           console.error("Error loading assigned medicines:", err);
         }
       });
+  }
+
+  // 🔥 AUTO-FILL LAST DATA
+  loadLastData() {
+    this.http.get<any>(
+      `${environment.apiUrl}/api/v1/prescriptions/last/${this.patientId}`
+    ).subscribe({
+      next: (data) => {
+        if (data) {
+          this.symptoms = data.symptoms || '';
+          this.diagnosis = data.diagnosis || '';
+        }
+      },
+      error: (err) => console.error(err)
+    });
   }
 
   // 🔥 select checkbox
@@ -92,7 +113,6 @@ export class MedicinelistComponent {
           timeToTake: []
         });
       }
-
     } else {
       this.selectedMedicines =
         this.selectedMedicines.filter(m => m.id !== medicine.id);
@@ -124,13 +144,12 @@ export class MedicinelistComponent {
     }
 
     const payload = this.selectedMedicines.map(m => ({
-  medicineName: m.name,
-  timeToTake: m.timeToTake,
-  symptoms: this.symptoms,     // 🔥 ADD
-  diagnosis: this.diagnosis    // 🔥 ADD
-}));
+      medicineName: m.name,
+      timeToTake: m.timeToTake,
+      symptoms: this.symptoms,     // 🔥 FIX
+      diagnosis: this.diagnosis    // 🔥 FIX
+    }));
 
-    console.log("Patient ID:", this.patientId);
     console.log("Payload:", payload);
 
     this.http.put(
@@ -139,16 +158,16 @@ export class MedicinelistComponent {
       { responseType: 'text' }
     ).subscribe({
       next: () => {
-  alert("Medicines assigned successfully ✅");
+        alert("Medicines assigned successfully ✅");
 
-  this.selectedMedicines = [];
+        this.selectedMedicines = [];
 
-  // 🔥 ADD THIS
-  this.symptoms = '';
-  this.diagnosis = '';
+        // 🔥 RESET
+        this.symptoms = '';
+        this.diagnosis = '';
 
-  this.loadAssignedMedicines();
-},
+        this.loadAssignedMedicines();
+      },
       error: (err) => {
         console.error(err);
         alert("Assignment failed ❌");
@@ -169,7 +188,7 @@ export class MedicinelistComponent {
       });
   }
 
-  // 🔥 update page
+  // 🔥 navigate update
   update(id: number) {
     this.router.navigate(['update-medicine', id]);
   }
@@ -178,6 +197,4 @@ export class MedicinelistComponent {
   getSelectedMedicine(medicine: Medicine) {
     return this.selectedMedicines.find(m => m.id === medicine.id);
   }
-  symptoms: string = '';
-diagnosis: string = '';
 }

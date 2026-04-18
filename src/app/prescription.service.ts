@@ -32,4 +32,9 @@ export class PrescriptionService {
 getHistory(id: number) {
   return this.httpClient.get<any[]>(`${environment.apiUrl}/api/v1/prescriptions/history/${id}`);
 }
+getLastPrescription(id: number) {
+  return this.httpClient.get<any>(
+    `${environment.apiUrl}/api/v1/prescriptions/last/${id}`
+  );
+}
 }
