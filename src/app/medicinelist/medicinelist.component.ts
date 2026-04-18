@@ -124,9 +124,11 @@ export class MedicinelistComponent {
     }
 
     const payload = this.selectedMedicines.map(m => ({
-      medicineName: m.name,
-      timeToTake: m.timeToTake
-    }));
+  medicineName: m.name,
+  timeToTake: m.timeToTake,
+  symptoms: this.symptoms,     // 🔥 ADD
+  diagnosis: this.diagnosis    // 🔥 ADD
+}));
 
     console.log("Patient ID:", this.patientId);
     console.log("Payload:", payload);
@@ -137,13 +139,16 @@ export class MedicinelistComponent {
       { responseType: 'text' }
     ).subscribe({
       next: () => {
-        alert("Medicines assigned successfully ✅");
+  alert("Medicines assigned successfully ✅");
 
-        this.selectedMedicines = [];
+  this.selectedMedicines = [];
 
-        // 🔥 refresh assigned list
-        this.loadAssignedMedicines();
-      },
+  // 🔥 ADD THIS
+  this.symptoms = '';
+  this.diagnosis = '';
+
+  this.loadAssignedMedicines();
+},
       error: (err) => {
         console.error(err);
         alert("Assignment failed ❌");
@@ -173,4 +178,6 @@ export class MedicinelistComponent {
   getSelectedMedicine(medicine: Medicine) {
     return this.selectedMedicines.find(m => m.id === medicine.id);
   }
+  symptoms: string = '';
+diagnosis: string = '';
 }

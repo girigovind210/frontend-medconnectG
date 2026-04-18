@@ -52,6 +52,24 @@
       </tr>
     </tbody>
   </table>
+  <!-- 🔥 Symptoms & Diagnosis -->
+<div class="card p-3 mt-3">
+  <h5>Patient Condition</h5>
+
+  <div class="mb-2">
+    <label>Symptoms</label>
+    <textarea class="form-control"
+              [(ngModel)]="symptoms"
+              placeholder="e.g. Fever, Cough"></textarea>
+  </div>
+
+  <div class="mb-2">
+    <label>Diagnosis</label>
+    <textarea class="form-control"
+              [(ngModel)]="diagnosis"
+              placeholder="e.g. Viral Infection"></textarea>
+  </div>
+</div>
 
   <div class="text-center mt-3">
     <button class="btn btn-primary"

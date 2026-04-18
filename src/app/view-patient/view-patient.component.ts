@@ -28,7 +28,9 @@ export class ViewPatientComponent implements OnInit {
 
   ngOnInit(): void {
     this.id = Number(this.route.snapshot.params['id']);
-    this.currentDateTime = new Date().toLocaleString();
+    this.currentDateTime = new Date().toLocaleString('en-IN', {
+  timeZone: 'Asia/Kolkata'
+});
 
     this.loadPatientAndPrescription();
     this.loadHistory();
@@ -137,11 +139,10 @@ setLatestPrescription(data: any[]) {
   );
 
   // 2️⃣ Get latest date
-  const latestDate = sorted[0].createdAt;
+  const latestDate = new Date(sorted[0].createdAt).getTime();
 
-  // 3️⃣ Filter only same date (same visit)
-  this.latestPrescription = sorted.filter(
-    p => p.createdAt === latestDate
-  );
+this.latestPrescription = sorted.filter(
+  p => new Date(p.createdAt).getTime() === latestDate
+);
 }
 }

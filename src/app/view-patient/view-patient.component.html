@@ -64,7 +64,7 @@
 
     <div *ngFor="let group of groupedHistory" class="card mb-3 p-3">
 
-      <p><strong>Date:</strong> {{ group?.date | date:'medium' }}</p>
+      <p><strong>Date:</strong> {{ group?.date | date:'medium':'Asia/Kolkata' }}</p>
 
       <p><strong>Symptoms:</strong> {{ group?.symptoms || 'N/A' }}</p>
       <p><strong>Diagnosis:</strong> {{ group?.diagnosis || 'N/A' }}</p>
