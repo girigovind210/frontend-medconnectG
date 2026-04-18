@@ -17,7 +17,7 @@ export class ViewPatientComponent implements OnInit {
   };
 
   patientHistory: any[] = [];
-
+  latestPrescription: any[] = [];
   currentDateTime: string = '';
 
   constructor(
@@ -42,6 +42,7 @@ export class ViewPatientComponent implements OnInit {
         this.prescriptionService.getPrescriptionsByPatientId(this.id).subscribe({
           next: (prescriptions: any[]) => {
             this.patient.prescription = prescriptions || [];
+            this.setLatestPrescription(this.patient.prescription);
           },
           error: (err: any) => {
             console.error("Prescription Error:", err);
@@ -122,5 +123,25 @@ groupHistory(data: any[]) {
   });
 
   this.groupedHistory = Array.from(map.values());
+}
+
+setLatestPrescription(data: any[]) {
+  if (!data || data.length === 0) {
+    this.latestPrescription = [];
+    return;
+  }
+
+  // 1️⃣ Sort by latest date
+  const sorted = data.sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  );
+
+  // 2️⃣ Get latest date
+  const latestDate = sorted[0].createdAt;
+
+  // 3️⃣ Filter only same date (same visit)
+  this.latestPrescription = sorted.filter(
+    p => p.createdAt === latestDate
+  );
 }
 }
