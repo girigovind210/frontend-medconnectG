@@ -29,4 +29,7 @@ export class PrescriptionService {
     `${this.baseUrl}/${patientId}`
   );
 }
+getHistory(id: number) {
+  return this.httpClient.get<any[]>(`${environment.apiUrl}/api/v1/prescriptions/history/${id}`);
+}
 }

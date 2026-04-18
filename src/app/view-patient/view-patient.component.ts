@@ -11,9 +11,13 @@ import { PrescriptionService } from '../prescription.service';
 export class ViewPatientComponent implements OnInit {
 
   id: number = 0;
+
   patient: any = {
     prescription: []
   };
+
+  patientHistory: any[] = [];
+
   currentDateTime: string = '';
 
   constructor(
@@ -26,36 +30,42 @@ export class ViewPatientComponent implements OnInit {
     this.id = Number(this.route.snapshot.params['id']);
     this.currentDateTime = new Date().toLocaleString();
 
-    this.loadPatientAndPrescription(); // ✅ single flow
+    this.loadPatientAndPrescription();
+    this.loadHistory();
   }
 
-  // ✅ FIXED METHOD (MAIN LOGIC)
   loadPatientAndPrescription(): void {
     this.patientService.getPatientById(this.id).subscribe({
       next: (data: any) => {
-        this.patient = {
-          ...data,
-          prescription: []
-        };
+        this.patient = { ...data, prescription: [] };
 
-        // 🔥 Load prescription AFTER patient loads
         this.prescriptionService.getPrescriptionsByPatientId(this.id).subscribe({
           next: (prescriptions: any[]) => {
-            console.log("💊 Prescription:", prescriptions);
             this.patient.prescription = prescriptions || [];
           },
-          error: (err) => {
-            console.error("❌ Prescription Error:", err);
+          error: (err: any) => {
+            console.error("Prescription Error:", err);
             this.patient.prescription = [];
           }
         });
       },
-      error: (err) => {
-        console.error("❌ Patient Error:", err);
+      error: (err: any) => {
+        console.error("Patient Error:", err);
       }
     });
   }
 
+  loadHistory(): void {
+  this.prescriptionService.getHistory(this.id).subscribe({
+    next: (data) => {
+      this.patientHistory = data || [];
+    },
+    error: (err) => {
+      console.error("History error", err);
+      this.patientHistory = [];
+    }
+  });
+}
   printPage(): void {
     const printContents = document.getElementById('print-section')?.innerHTML;
 
@@ -88,8 +98,8 @@ export class ViewPatientComponent implements OnInit {
     }
 
     this.prescriptionService.sendPrescription(this.patient.id).subscribe({
-      next: () => alert('Prescription sent successfully! ✅'),
-      error: () => alert('Failed to send prescription ❌')
+      next: () => alert('Prescription sent successfully!'),
+      error: () => alert('Failed to send prescription')
     });
   }
 }

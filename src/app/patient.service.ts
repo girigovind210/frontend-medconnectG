@@ -64,4 +64,5 @@ export class PatientService {
   searchPatients(query: string): Observable<Patient[]> {
     return this.httpclient.get<Patient[]>(`${this.baseUrl}/search?query=${query}`);
   }
+  
 }
