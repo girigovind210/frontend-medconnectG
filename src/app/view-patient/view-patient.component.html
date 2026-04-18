@@ -1,11 +1,13 @@
 <div class="container mt-3" id="print-section">
 
+  <!-- HEADER -->
   <div class="text-center mb-3">
     <img src="https://medconnect-frontend-1.onrender.com/assets/medconnect2-logo.png"
          alt="logo" width="120">
     <p><strong>Date & Time:</strong> {{ currentDateTime }}</p>
   </div>
 
+  <!-- PATIENT DETAILS -->
   <div class="card shadow-lg p-4 mt-4">
     <h4 class="text-center text-primary mb-4">
       Patient Prescription Details
@@ -18,6 +20,7 @@
       <tr><th>Blood Group</th><td>{{ patient?.blood }}</td></tr>
       <tr><th>Dose</th><td>{{ patient?.dose }}</td></tr>
 
+      <!-- CURRENT PRESCRIPTION -->
       <tr>
         <th>Prescription</th>
         <td>
@@ -43,7 +46,6 @@
                 </td>
               </tr>
             </tbody>
-
           </table>
         </td>
       </tr>
@@ -55,32 +57,47 @@
     </table>
   </div>
 
-  <!-- HISTORY -->
+  <!-- 🔥 FIXED HISTORY (GROUPED) -->
   <h4 class="mt-4">Patient History</h4>
 
-<div *ngIf="patientHistory?.length">
+  <div *ngIf="groupedHistory?.length; else noHistory">
 
-  <div *ngFor="let p of patientHistory" class="card mb-3 p-3">
+    <div *ngFor="let group of groupedHistory" class="card mb-3 p-3">
 
-    <p><strong>Date:</strong> {{ p?.createdAt | date:'medium' }}</p>
+      <p><strong>Date:</strong> {{ group?.date | date:'medium' }}</p>
 
-    <p><strong>Symptoms:</strong> {{ p?.symptoms }}</p>
-    <p><strong>Diagnosis:</strong> {{ p?.diagnosis }}</p>
+      <p><strong>Symptoms:</strong> {{ group?.symptoms || 'N/A' }}</p>
+      <p><strong>Diagnosis:</strong> {{ group?.diagnosis || 'N/A' }}</p>
 
-    <p><strong>Medicine:</strong> {{ p?.medicine?.drugName }}</p>
-    <p><strong>Dosage:</strong> {{ p?.dosage }}</p>
-    <p><strong>Time:</strong> {{ p?.timeToTake?.join(', ') }}</p>
+      <table class="table table-sm mt-2">
+        <thead>
+          <tr>
+            <th>Medicine</th>
+            <th>Dosage</th>
+            <th>Time</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let p of group?.medicines">
+            <td>{{ p?.medicine?.drugName }}</td>
+            <td>{{ p?.dosage }}</td>
+            <td>{{ p?.timeToTake?.join(', ') }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
 
   </div>
 
-</div>
-
-<ng-template #noHistory>
-  <p>No history available</p>
-</ng-template>
+  <ng-template #noHistory>
+    <p>No history available</p>
+  </ng-template>
 
 </div>
 
+<!-- ACTION BUTTONS -->
 <div class="text-center mt-3">
   <button class="btn btn-dark mx-2" (click)="printPage()">Print</button>
   <button class="btn btn-success" (click)="sendPrescription()">Send</button>

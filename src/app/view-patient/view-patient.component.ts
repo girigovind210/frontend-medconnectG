@@ -55,14 +55,13 @@ export class ViewPatientComponent implements OnInit {
     });
   }
 
-  loadHistory(): void {
+  loadHistory() {
   this.prescriptionService.getHistory(this.id).subscribe({
-    next: (data) => {
-      this.patientHistory = data || [];
+    next: (data: any[]) => {
+      this.groupHistory(data); // 🔥 IMPORTANT
     },
-    error: (err) => {
+    error: (err: any) => {
       console.error("History error", err);
-      this.patientHistory = [];
     }
   });
 }
@@ -102,4 +101,26 @@ export class ViewPatientComponent implements OnInit {
       error: () => alert('Failed to send prescription')
     });
   }
+  groupedHistory: any[] = [];
+
+groupHistory(data: any[]) {
+  const map = new Map();
+
+  data.forEach(p => {
+    const key = p.createdAt;
+
+    if (!map.has(key)) {
+      map.set(key, {
+        date: p.createdAt,
+        symptoms: p.symptoms,
+        diagnosis: p.diagnosis,
+        medicines: []
+      });
+    }
+
+    map.get(key).medicines.push(p);
+  });
+
+  this.groupedHistory = Array.from(map.values());
+}
 }
