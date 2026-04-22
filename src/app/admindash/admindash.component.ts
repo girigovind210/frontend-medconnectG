@@ -27,20 +27,16 @@ export class AdmindashComponent implements OnInit {
   }
 
   // 🔥 GET ALL PATIENTS
-  getPatients(): void {
+ getPatients(): void {
   this.loading = true;
 
   this.patientService.getPatientList().subscribe({
     next: (data: Patient[]) => {
       console.log("PATIENT DATA:", data);
 
-      // 🔥 FORCE NEW REFERENCE (IMPORTANT)
-      this.patients = [];
+      this.patients = data || [];
 
-      setTimeout(() => {
-        this.patients = data || [];
-      });
-
+      // ✅ IMPORTANT: ensure UI updates AFTER data set
       this.loading = false;
     },
     error: (err) => {
