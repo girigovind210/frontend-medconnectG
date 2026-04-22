@@ -25,14 +25,11 @@ export class AdmindashComponent implements OnInit {
 
   loadPatients(): void {
     this.patientService.getPatientList().subscribe({
-      next: (data) => {
+      next: (data: any[]) => {
         console.log("DATA:", data);
 
-        // 🔥 HARD RESET (THIS FIXES RENDER ISSUE)
-        this.patients = [];
-        setTimeout(() => {
-          this.patients = data;
-        }, 0);
+        // 🔥 THIS IS THE REAL FIX
+        this.patients = [...data];   // create NEW reference
       },
       error: (err) => {
         console.error(err);
