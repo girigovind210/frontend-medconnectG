@@ -51,23 +51,25 @@
     </thead>
 
     <tbody>
-      <tr *ngFor="let patient of patients">
+  <ng-container *ngFor="let patient of patients">
 
-        <td>{{ patient.id }}</td>
-        <td>{{ patient.name }}</td>
-        <td>{{ patient.age }}</td>
-        <td>{{ patient.fees }}</td>
-        <td>{{ patient.urgency }}</td>
+    <tr>
+      <td>{{ patient.id }}</td>
+      <td>{{ patient.name }}</td>
+      <td>{{ patient.age }}</td>
+      <td>{{ patient.fees }}</td>
+      <td>{{ patient.urgency }}</td>
 
-        <td>
-          <button class="btn btn-danger btn-sm"
-                  (click)="delete(patient.id)">
-            Delete
-          </button>
-        </td>
+      <td>
+        <button class="btn btn-danger btn-sm"
+                (click)="delete(patient.id)">
+          Delete
+        </button>
+      </td>
+    </tr>
 
-      </tr>
-    </tbody>
+  </ng-container>
+</tbody>
 
   </table>
 
