@@ -61,10 +61,7 @@ const routes: Routes = [
   {
     path:'adlogin',component:AdloginComponent
   }, 
-  // last line
-{ 
-  path: '**', redirectTo: 'home'
- }
+  
   
 ];
 
