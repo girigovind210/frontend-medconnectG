@@ -13,14 +13,10 @@
 
   <div class="ml-auto">
     <button style="margin: 5px;" class="btn btn-success">
-  <a style="color:white;" routerLink="/patient-dashboard">
+  <a style="color:white;" [routerLink]="['/patient-dashboard',patient.id]">Go
     Login as Patient
   </a>
 </button>
-
-    <button style="margin:5px;" class="btn btn-danger">
-      <a style="color:white;" routerLink="/doclogin">Login as Doctor</a>
-    </button>
 
     <button style="margin:5px;" class="btn btn-danger">
       <a style="color:white;" routerLink="/adlogin">Login as Admin</a>
