@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-patient-dashboard',
@@ -12,7 +13,12 @@ export class PatientDashboardComponent implements OnInit {
   stores: any[] = [];
   search: string = '';
 
+  constructor(private route: ActivatedRoute) {}
+
   ngOnInit(): void {
+    const id = this.route.snapshot.paramMap.get('id');
+    console.log("Patient ID:", id);
+
     this.loadStores();
   }
 
