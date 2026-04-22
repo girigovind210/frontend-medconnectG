@@ -19,7 +19,7 @@ import { PatientDashboardComponent } from './patient-dashboard/patient-dashboard
 
 const routes: Routes = [
 
-  { path: 'patient-dashboard', component: PatientDashboardComponent },
+  { path: 'patient-dashboard/:id', component: PatientDashboardComponent },
 
   { path: 'view-medicine/:id', component: MedicinelistComponent },
 

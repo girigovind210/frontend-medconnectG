@@ -9,7 +9,7 @@ export class DocauthService {
 
   authenticate(username:string,password:string){
 
-    if(username=="vedant"&&password=="vedant@9565"){
+    if(username=="Rajesh"&&password=="rajesh123"){
 
       sessionStorage.setItem('username',username);
       return true;
