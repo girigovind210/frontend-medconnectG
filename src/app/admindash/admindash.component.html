@@ -39,6 +39,7 @@
     <a style="color: rgb(86, 86, 86); font-size: xx-large;">Current Patient List in the Queue</a>
 <div class="tableFixHead">
   <br>
+  <p>Total patients: {{ patients?.length }}</p>
 <table class="table table-striped">
     <thead>
         <tr>
@@ -51,7 +52,7 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let patient of patients || []">
+        <tr *ngFor="let patient of patients; let i = index">
             <td> {{patient.id}}</td>
             <td> {{patient.name}}</td>
             <td> {{patient.age}}</td>

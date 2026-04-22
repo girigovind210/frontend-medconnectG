@@ -44,7 +44,14 @@ getPatients() {
   this.patientService.getPatientList().subscribe({
     next: (data) => {
       console.log("PATIENT DATA:", data);
-     this.patients = [...data];
+
+      this.patients = [...data];   // already good
+
+      // 🔥 ADD THIS LINE (IMPORTANT)
+      setTimeout(() => {
+        this.patients = [...data];
+      });
+
       this.loading = false;
     },
     error: (err) => {
