@@ -28,21 +28,27 @@ export class AdmindashComponent implements OnInit {
 
   // 🔥 GET ALL PATIENTS
   getPatients(): void {
-    this.loading = true;
+  this.loading = true;
 
-    this.patientService.getPatientList().subscribe({
-      next: (data: Patient[]) => {
-        console.log("PATIENT DATA:", data);
+  this.patientService.getPatientList().subscribe({
+    next: (data: Patient[]) => {
+      console.log("PATIENT DATA:", data);
 
-        this.patients = data || [];   // ✅ clean assignment
-        this.loading = false;
-      },
-      error: (err) => {
-        console.error("ERROR:", err);
-        this.loading = false;
-      }
-    });
-  }
+      // 🔥 FORCE NEW REFERENCE (IMPORTANT)
+      this.patients = [];
+
+      setTimeout(() => {
+        this.patients = data || [];
+      });
+
+      this.loading = false;
+    },
+    error: (err) => {
+      console.error("ERROR:", err);
+      this.loading = false;
+    }
+  });
+}
 
   // 🔥 DELETE PATIENT
   delete(id: number): void {
