@@ -24,12 +24,13 @@ export class AdmindashComponent implements OnInit {
     this.loadPatients();
   }
 
-  loadPatients(): void {
+ loadPatients(): void {
   this.patientService.getPatientList().subscribe({
     next: (data: any[]) => {
       console.log("DATA:", data);
 
-      this.patients = data;   // ✅ keep it simple
+      this.allPatients = data;
+      this.patients = data;   // initial display
     },
     error: (err) => {
       console.error(err);
@@ -48,4 +49,22 @@ export class AdmindashComponent implements OnInit {
     this.router.navigate(['home']);
   }
   
+  searchText: string = '';
+allPatients: Patient[] = [];
+
+searchPatients(): void {
+  const value = this.searchText.toLowerCase().trim();
+
+  if (!value) {
+    this.patients = this.allPatients;
+    return;
+  }
+
+  this.patients = this.allPatients.filter(p =>
+    p.name.toLowerCase().includes(value) ||
+    p.id.toString().includes(value) ||
+    p.age.toString().includes(value)
+  );
+}
+
 }

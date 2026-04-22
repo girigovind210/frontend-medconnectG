@@ -1,14 +1,54 @@
 <div class="container mt-4">
 
-  <h3>DEBUG VIEW</h3>
+  <h2 class="text-center">Admin Dashboard</h2>
 
-  <!-- 🔥 FORCE RENDER CHECK -->
-  <div *ngIf="patients">
-    <p>Total: {{ patients.length }}</p>
+  <hr>
 
-    <div *ngFor="let p of patients">
-      {{ p.name }} - {{ p.age }}
-    </div>
-  </div>
+  <h4>Current Patient List</h4>
+  <p><strong>Total:</strong> {{ patients.length }}</p>
+  <div class="mb-3">
+  <input
+    type="text"
+    class="form-control"
+    placeholder="Search by name, ID, or age..."
+    [(ngModel)]="searchText"
+    (input)="searchPatients()"
+  />
+</div>
+  <table class="table table-bordered table-striped mt-3">
+
+    <thead class="table-dark">
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Age</th>
+        <th>Fees</th>
+        <th>Urgency</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+      <!-- ✅ IMPORTANT FIX -->
+      <ng-container *ngFor="let p of patients">
+        <tr>
+          <td>{{ p.id }}</td>
+          <td>{{ p.name }}</td>
+          <td>{{ p.age }}</td>
+          <td>{{ p.fees }}</td>
+          <td>{{ p.urgency }}</td>
+          <td>
+            <button class="btn btn-danger btn-sm"
+                    (click)="delete(p.id)">
+              Delete
+            </button>
+          </td>
+        </tr>
+      </ng-container>
+
+    </tbody>
+
+  </table>
 
 </div>
