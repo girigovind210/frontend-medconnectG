@@ -18,6 +18,7 @@ import { UpdateMedicineComponent } from './update-medicine/update-medicine.compo
 import { DocloginComponent } from './doclogin/doclogin.component';
 import { AdloginComponent } from './adlogin/adlogin.component';
 import { PatientDashboardComponent } from './patient-dashboard/patient-dashboard.component';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -34,13 +35,15 @@ import { PatientDashboardComponent } from './patient-dashboard/patient-dashboard
     CreateAppointmentComponent,
     DocdashComponent,
     ViewPatientComponent,
-    AppointmentComponent
+    AppointmentComponent,
+    AdmindashComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+     CommonModule
   ],
   providers: [],   // ✅ EMPTY (IMPORTANT)
   bootstrap: [AppComponent]

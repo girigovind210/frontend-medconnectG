@@ -3,14 +3,12 @@ import { PatientService } from '../patient.service';
 import { Patient } from '../patient';
 import { AdminauthService } from '../adminauth.service';
 import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-admindash',
   templateUrl: './admindash.component.html',
   styleUrls: ['./admindash.component.css'],
-   standalone: true,
-  imports: [CommonModule]
 })
 export class AdmindashComponent implements OnInit {
 
