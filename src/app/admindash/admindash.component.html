@@ -10,7 +10,10 @@
       </li>
     </ul>
 
-    <button class="btn btn-danger" (click)="logout()">Logout</button>
+```
+<button class="btn btn-danger" (click)="logout()">Logout</button>
+```
+
   </div>
 </nav>
 
@@ -24,27 +27,36 @@
 
   <hr>
 
-  <!-- 🔥 LOADING -->
-  <!-- <div *ngIf="loading" class="text-center">
+  <!-- 🔄 LOADING -->
+
+  <div *ngIf="loading" class="text-center">
     <p>Loading patients...</p>
-  </div> -->
+  </div>
 
-  
-  <!-- 🔥 TABLE -->
-  <div class="mt-3">
+  <!-- ✅ PATIENT LIST -->
 
-  <h4>Current Patient List in the Queue</h4>
-  <p><strong>Total patients:</strong> {{ patients.length }}</p>
+  <div *ngIf="!loading && patients && patients.length > 0">
 
-  <div *ngFor="let patient of patients" class="card mb-2 p-3 shadow-sm">
+```
+<h4 class="mt-3">Current Patient List in the Queue</h4>
+<p><strong>Total patients:</strong> {{ patients.length }}</p>
 
-    <div><strong>ID:</strong> {{ patient.id }}</div>
-    <div><strong>Name:</strong> {{ patient.name }}</div>
-    <div><strong>Age:</strong> {{ patient.age }}</div>
-    <div><strong>Fees:</strong> {{ patient.fees }}</div>
-    <div><strong>Urgency:</strong> {{ patient.urgency }}</div>
+<div *ngFor="let patient of patients" class="card mb-3 shadow-sm">
 
-    <div class="mt-2">
+  <div class="card-body">
+
+    <div class="row">
+      <div class="col-md-4"><strong>ID:</strong> {{ patient?.id }}</div>
+      <div class="col-md-4"><strong>Name:</strong> {{ patient?.name }}</div>
+      <div class="col-md-4"><strong>Age:</strong> {{ patient?.age }}</div>
+    </div>
+
+    <div class="row mt-2">
+      <div class="col-md-4"><strong>Fees:</strong> ₹{{ patient?.fees }}</div>
+      <div class="col-md-4"><strong>Urgency:</strong> {{ patient?.urgency }}</div>
+    </div>
+
+    <div class="mt-3">
       <button class="btn btn-danger btn-sm"
               (click)="delete(patient.id)">
         Delete
@@ -54,8 +66,14 @@
   </div>
 
 </div>
+```
 
-<!-- EMPTY STATE -->
-<div *ngIf="!loading && patients?.length === 0" class="text-center mt-3">
-  No patients found
+  </div>
+
+  <!-- ❌ NO DATA -->
+
+  <div *ngIf="!loading && (!patients || patients.length === 0)" class="text-center mt-4">
+    <p class="text-muted">No patients found</p>
+  </div>
+
 </div>
