@@ -1,64 +1,82 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { PatientService } from '../patient.service';
 import { Patient } from '../patient';
 import { AdminauthService } from '../adminauth.service';
 import { Router } from '@angular/router';
-import { BASE_URL } from '../constants';  // adjust path as needed
 
 @Component({
   selector: 'app-admindash',
   templateUrl: './admindash.component.html',
   styleUrls: ['./admindash.component.css']
 })
-export class AdmindashComponent {
-searchPatients() {
-throw new Error('Method not implemented.');
-}
-searchText: any;
-deletePatient(arg0: number) {
-throw new Error('Method not implemented.');
-}
-  patients:Patient[]=[];
-constructor(private patientService:PatientService,private adminauthService:AdminauthService,private router:Router){}
-ngOnInit():void{
-  this.getPatients();
-}
-delete(id:number)
-{
-  this.patientService.delete(id).subscribe(data=>{console.log(data);
+export class AdmindashComponent implements OnInit {
+
+  patients: Patient[] = [];
+  loading: boolean = false;
+  searchText: string = '';
+
+  constructor(
+    private patientService: PatientService,
+    private adminauthService: AdminauthService,
+    private router: Router
+  ) {}
+
+  // 🔥 INIT
+  ngOnInit(): void {
     this.getPatients();
-  })
-}
+  }
 
-logout(){
-  this.adminauthService.logout();
-  this.router.navigate(['home'])
-}
+  // 🔥 GET ALL PATIENTS
+  getPatients(): void {
+    this.loading = true;
 
+    this.patientService.getPatientList().subscribe({
+      next: (data: Patient[]) => {
+        console.log("PATIENT DATA:", data);
 
-loading: boolean = false;
+        this.patients = data || [];   // ✅ clean assignment
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error("ERROR:", err);
+        this.loading = false;
+      }
+    });
+  }
 
-getPatients() {
-  this.loading = true;
-
-  this.patientService.getPatientList().subscribe({
-    next: (data) => {
-      console.log("PATIENT DATA:", data);
-
-      this.patients = [...data];   // already good
-
-      // 🔥 ADD THIS LINE (IMPORTANT)
-      setTimeout(() => {
-        this.patients = [...data];
-      });
-
-      this.loading = false;
-    },
-    error: (err) => {
-      console.error(err);
-      this.loading = false;
+  // 🔥 DELETE PATIENT
+  delete(id: number): void {
+    if (!confirm("Are you sure you want to delete this patient?")) {
+      return;
     }
-  });
-}
 
+    this.patientService.delete(id).subscribe({
+      next: () => {
+        console.log("Deleted:", id);
+        this.getPatients(); // refresh list
+      },
+      error: (err) => {
+        console.error("Delete Error:", err);
+      }
+    });
+  }
+
+  // 🔥 SEARCH (LOCAL FILTER)
+  searchPatients(): void {
+    if (!this.searchText.trim()) {
+      this.getPatients();
+      return;
+    }
+
+    this.patients = this.patients.filter(p =>
+      p.name.toLowerCase().includes(this.searchText.toLowerCase()) ||
+      p.id.toString().includes(this.searchText)
+    );
+  }
+
+  // 🔥 LOGOUT
+  logout(): void {
+    this.adminauthService.logout();
+    this.router.navigate(['home']);
+  }
 }
