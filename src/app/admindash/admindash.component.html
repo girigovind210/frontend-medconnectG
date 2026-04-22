@@ -31,6 +31,9 @@
     <a style="color: rgb(86, 86, 86); font-size: x-large;"><marquee behavior="scroll" direction="left">
       Welcome to Admin Dashboard. Please find the patient list below!!. Click Appointments to view and update Appointments, Click Add Appointment to add new Appointment</marquee></a>
   <hr>
+  <div *ngIf="loading" class="text-center">
+  Loading patients...
+</div>
   <!--<input type="text" name="search" [(ngModel)]="searchText" placeholder="Search" (input)="searchPatients()"> -->
   <br>
     <a style="color: rgb(86, 86, 86); font-size: xx-large;">Current Patient List in the Queue</a>

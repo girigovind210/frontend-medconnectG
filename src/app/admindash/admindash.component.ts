@@ -8,7 +8,7 @@ import { BASE_URL } from '../constants';  // adjust path as needed
 @Component({
   selector: 'app-admindash',
   templateUrl: './admindash.component.html',
-  styleUrl: './admindash.component.css'
+  styleUrls: ['./admindash.component.css']
 })
 export class AdmindashComponent {
 searchPatients() {
@@ -23,11 +23,6 @@ constructor(private patientService:PatientService,private adminauthService:Admin
 ngOnInit():void{
   this.getPatients();
 }
-getPatients(){
-  this.patientService.getPatientList().subscribe(data=>{
-this.patients=data;
-  })
-}
 delete(id:number)
 {
   this.patientService.delete(id).subscribe(data=>{console.log(data);
@@ -38,5 +33,23 @@ delete(id:number)
 logout(){
   this.adminauthService.logout();
   this.router.navigate(['home'])
+}
+
+
+loading: boolean = false;
+
+getPatients() {
+  this.loading = true;
+
+  this.patientService.getPatientList().subscribe({
+    next: (data) => {
+      this.patients = data;
+      this.loading = false;
+    },
+    error: (err) => {
+      console.error(err);
+      this.loading = false;
+    }
+  });
 }
 }
