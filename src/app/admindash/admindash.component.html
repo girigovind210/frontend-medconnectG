@@ -25,13 +25,13 @@
   <hr>
 
   <!-- 🔥 LOADING -->
-  <div *ngIf="loading" class="text-center">
+  <!-- <div *ngIf="loading" class="text-center">
     <p>Loading patients...</p>
-  </div>
+  </div> -->
 
   
   <!-- 🔥 TABLE -->
-  <div *ngIf="patients && patients.length > 0">
+  <div>
 
   <h4 class="mt-3">Current Patient List in the Queue</h4>
 
@@ -51,24 +51,21 @@
     </thead>
 
     <tbody>
-  <ng-container *ngFor="let patient of patients">
 
-    <tr>
-      <td>{{ patient.id }}</td>
-      <td>{{ patient.name }}</td>
-      <td>{{ patient.age }}</td>
-      <td>{{ patient.fees }}</td>
-      <td>{{ patient.urgency }}</td>
+  <tr *ngFor="let patient of patients; let i = index">
+    <td>{{ patient.id }}</td>
+    <td>{{ patient.name }}</td>
+    <td>{{ patient.age }}</td>
+    <td>{{ patient.fees }}</td>
+    <td>{{ patient.urgency }}</td>
+    <td>
+      <button class="btn btn-danger btn-sm"
+              (click)="delete(patient.id)">
+        Delete
+      </button>
+    </td>
+  </tr>
 
-      <td>
-        <button class="btn btn-danger btn-sm"
-                (click)="delete(patient.id)">
-          Delete
-        </button>
-      </td>
-    </tr>
-
-  </ng-container>
 </tbody>
 
   </table>
