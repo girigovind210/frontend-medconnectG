@@ -1,6 +1,10 @@
 <div class="container mt-4">
 
   <h2 class="text-center">Admin Dashboard</h2>
+<div class="mb-3 text-center">
+  <button class="btn btn-primary mx-2" (click)="switchToPatients()">Patients</button>
+  <button class="btn btn-secondary mx-2" (click)="switchToDoctors()">Doctors</button>
+</div>
 
   <hr>
 
@@ -50,5 +54,51 @@
     </tbody>
 
   </table>
+  <div *ngIf="viewMode === 'doctors'">
+
+  <h4>Doctor List</h4>
+
+  <!-- ADD DOCTOR FORM -->
+  <div class="card p-3 mb-3">
+    <input class="form-control mb-2" placeholder="Name" [(ngModel)]="newDoctor.name">
+    <input class="form-control mb-2" placeholder="Specialization" [(ngModel)]="newDoctor.specialization">
+    <input class="form-control mb-2" placeholder="Email" [(ngModel)]="newDoctor.email">
+    <input class="form-control mb-2" placeholder="Phone" [(ngModel)]="newDoctor.phone">
+
+    <button class="btn btn-success" (click)="addDoctor()">Add Doctor</button>
+  </div>
+
+  <!-- DOCTOR TABLE -->
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Specialization</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let d of doctors">
+        <td>{{ d.id }}</td>
+        <td>{{ d.name }}</td>
+        <td>{{ d.specialization }}</td>
+        <td>{{ d.email }}</td>
+        <td>{{ d.phone }}</td>
+        <td>
+          <button class="btn btn-danger btn-sm"
+                  (click)="deleteDoctor(d.id)">
+            Delete
+          </button>
+        </td>
+      </tr>
+    </tbody>
+
+  </table>
+
+</div>
 
 </div>

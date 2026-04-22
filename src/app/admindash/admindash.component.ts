@@ -3,6 +3,7 @@ import { PatientService } from '../patient.service';
 import { Patient } from '../patient';
 import { AdminauthService } from '../adminauth.service';
 import { Router } from '@angular/router';
+import { DoctorService } from '../doctor.service';
 
 
 @Component({
@@ -16,6 +17,7 @@ export class AdmindashComponent implements OnInit {
 
   constructor(
     private patientService: PatientService,
+    private doctorService: DoctorService,
     private adminauthService: AdminauthService,
     private router: Router
   ) {}
@@ -67,4 +69,40 @@ searchPatients(): void {
   );
 }
 
+viewMode: 'patients' | 'doctors' = 'patients';
+doctors: any[] = [];
+newDoctor = {
+  name: '',
+  specialization: '',
+  email: '',
+  phone: ''
+};
+
+loadDoctors() {
+  this.doctorService.getDoctors().subscribe(data => {
+    this.doctors = data;
+  });
+}
+
+switchToDoctors() {
+  this.viewMode = 'doctors';
+  this.loadDoctors();
+}
+
+switchToPatients() {
+  this.viewMode = 'patients';
+}
+
+addDoctor() {
+  this.doctorService.addDoctor(this.newDoctor).subscribe(() => {
+    alert("Doctor added ✅");
+    this.newDoctor = { name: '', specialization: '', email: '', phone: '' };
+    this.loadDoctors();
+  });
+}
+deleteDoctor(id: number) {
+  this.doctorService.deleteDoctor(id).subscribe(() => {
+    this.loadDoctors();
+  });
+}
 }
