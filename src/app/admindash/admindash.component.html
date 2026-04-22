@@ -51,7 +51,7 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let patient of patients">
+        <tr *ngFor="let patient of patients || []">
             <td> {{patient.id}}</td>
             <td> {{patient.name}}</td>
             <td> {{patient.age}}</td>

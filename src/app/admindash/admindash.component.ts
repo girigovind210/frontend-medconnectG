@@ -43,7 +43,8 @@ getPatients() {
 
   this.patientService.getPatientList().subscribe({
     next: (data) => {
-      this.patients = data;
+      console.log("PATIENT DATA:", data);
+     this.patients = [...data];
       this.loading = false;
     },
     error: (err) => {
@@ -52,4 +53,5 @@ getPatients() {
     }
   });
 }
+
 }
