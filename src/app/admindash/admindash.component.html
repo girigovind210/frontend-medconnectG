@@ -1,79 +1,14 @@
-<nav class="navbar navbar-expand-lg bg-dark">
-  <a class="navbar-brand text-white">MedConnect</a>
-
-  <div class="collapse navbar-collapse">
-    <ul class="navbar-nav me-auto">
-      <li class="nav-item">
-        <a class="nav-link text-white" routerLink="/appointmentlist">
-          Appointments
-        </a>
-      </li>
-    </ul>
-
-```
-<button class="btn btn-danger" (click)="logout()">Logout</button>
-```
-
-  </div>
-</nav>
-
 <div class="container mt-4">
 
-  <h2 class="text-center">Admin Dashboard</h2>
+  <h3>DEBUG VIEW</h3>
 
-  <marquee class="text-muted mt-2">
-    Welcome to Admin Dashboard. View and manage patients easily.
-  </marquee>
+  <!-- 🔥 FORCE RENDER CHECK -->
+  <div *ngIf="patients">
+    <p>Total: {{ patients.length }}</p>
 
-  <hr>
-
-  <!-- 🔄 LOADING -->
-
-  <div *ngIf="loading" class="text-center">
-    <p>Loading patients...</p>
-  </div>
-
-  <!-- ✅ PATIENT LIST -->
-
-  <div *ngIf="!loading && patients && patients.length > 0">
-
-```
-<h4 class="mt-3">Current Patient List in the Queue</h4>
-<p><strong>Total patients:</strong> {{ patients.length }}</p>
-
-<div *ngFor="let patient of patients" class="card mb-3 shadow-sm">
-
-  <div class="card-body">
-
-    <div class="row">
-      <div class="col-md-4"><strong>ID:</strong> {{ patient?.id }}</div>
-      <div class="col-md-4"><strong>Name:</strong> {{ patient?.name }}</div>
-      <div class="col-md-4"><strong>Age:</strong> {{ patient?.age }}</div>
+    <div *ngFor="let p of patients">
+      {{ p.name }} - {{ p.age }}
     </div>
-
-    <div class="row mt-2">
-      <div class="col-md-4"><strong>Fees:</strong> ₹{{ patient?.fees }}</div>
-      <div class="col-md-4"><strong>Urgency:</strong> {{ patient?.urgency }}</div>
-    </div>
-
-    <div class="mt-3">
-      <button class="btn btn-danger btn-sm"
-              (click)="delete(patient.id)">
-        Delete
-      </button>
-    </div>
-
-  </div>
-
-</div>
-```
-
-  </div>
-
-  <!-- ❌ NO DATA -->
-
-  <div *ngIf="!loading && (!patients || patients.length === 0)" class="text-center mt-4">
-    <p class="text-muted">No patients found</p>
   </div>
 
 </div>

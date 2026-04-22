@@ -24,18 +24,17 @@ export class AdmindashComponent implements OnInit {
   }
 
   loadPatients(): void {
-    this.patientService.getPatientList().subscribe({
-      next: (data: any[]) => {
-        console.log("DATA:", data);
+  this.patientService.getPatientList().subscribe({
+    next: (data: any[]) => {
+      console.log("DATA:", data);
 
-        // 🔥 THIS IS THE REAL FIX
-        this.patients = [...data];   // create NEW reference
-      },
-      error: (err) => {
-        console.error(err);
-      }
-    });
-  }
+      this.patients = data;   // ✅ keep it simple
+    },
+    error: (err) => {
+      console.error(err);
+    }
+  });
+}
 
   delete(id: number): void {
     this.patientService.delete(id).subscribe(() => {
