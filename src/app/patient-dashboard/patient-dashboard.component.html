@@ -82,6 +82,7 @@
             *ngFor="let m of store.medicines"
             [style.backgroundColor]="isMatch(m) ? '#d4edda' : ''"
             [style.fontWeight]="isMatch(m) ? 'bold' : 'normal'"
+            [style.color]="isMatch(m) ? 'green' : 'black'"
             style="padding:4px; margin:2px; display:inline-block; border-radius:4px;"
           >
             {{ m }}

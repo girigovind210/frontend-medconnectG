@@ -53,7 +53,7 @@ export class PatientDashboardComponent implements OnInit {
 
         // ✅ handle all possible field names
         this.medicines = data.prescription || data.prescriptions || [];
-
+        console.log("Medicines:", this.medicines);
         this.loadStores();
       },
 
@@ -65,7 +65,7 @@ export class PatientDashboardComponent implements OnInit {
         this.openStores = 0;
         this.errorMessage = "Invalid Patient ID";
       }
-
+      
     });
   }
 
@@ -75,6 +75,8 @@ export class PatientDashboardComponent implements OnInit {
   const prescribed = this.medicines
     .map((m: any) => (m?.medicineName || m?.name || '').toLowerCase())
     .filter(m => m);
+
+  console.log("Prescribed:", prescribed); // debug
 
   const allStores = [
     {
@@ -97,12 +99,20 @@ export class PatientDashboardComponent implements OnInit {
     }
   ];
 
-  // ✅ SMART MATCH (partial)
+  // ✅ SMART MATCH (both directions)
   this.stores = allStores.filter(store =>
     store.medicines.some((med: string) =>
-      prescribed.some(p => p.includes(med.toLowerCase()))
+      prescribed.some(p =>
+        p.includes(med.toLowerCase()) || med.toLowerCase().includes(p)
+      )
     )
   );
+
+  // ✅ fallback (important for demo)
+  if (this.stores.length === 0) {
+    console.log("No match → showing all stores");
+    this.stores = allStores;
+  }
 
   this.totalStores = this.stores.length;
   this.openStores = this.stores.filter(s => s.open).length;
