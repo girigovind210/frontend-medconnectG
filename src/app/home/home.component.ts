@@ -8,24 +8,11 @@ import { Router } from '@angular/router';
 })
 export class HomeComponent {
 
-  patientId: string = '';
-
   constructor(private router: Router) {}
 
-  // ✅ Button click login
+  // ✅ Simply navigate (no ID needed here)
   goToPatientDashboard() {
-    if (this.patientId && this.patientId.trim() !== '') {
-      this.router.navigate(['/patient-dashboard', this.patientId]);
-    } else {
-      alert('Please enter Patient ID');
-    }
+    this.router.navigate(['/patient-dashboard']);
   }
 
-  // ✅ Optional: prompt-based login (if you want)
-  loginWithPrompt() {
-    const id = prompt('Enter Patient ID:');
-    if (id) {
-      this.router.navigate(['/patient-dashboard', id]);
-    }
-  }
 }
