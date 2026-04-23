@@ -20,6 +20,7 @@ import { PatientDashboardComponent } from './patient-dashboard/patient-dashboard
 const routes: Routes = [
 
   { path: 'patient-dashboard/:id', component: PatientDashboardComponent },
+  { path: 'index.html', redirectTo: '', pathMatch: 'full' },
 
   { path: 'view-medicine/:id', component: MedicinelistComponent 
 
@@ -41,6 +42,7 @@ const routes: Routes = [
   },
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   
+
   {
     path:'docdash',component:DocdashComponent,canActivate:[DoctorauthguardService]
   },
