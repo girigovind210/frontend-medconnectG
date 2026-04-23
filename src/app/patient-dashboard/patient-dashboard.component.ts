@@ -74,8 +74,16 @@ export class PatientDashboardComponent implements OnInit {
 
      const prescribed = this.medicines
   .map((m: any) => {
-    console.log("Medicine object:", m); // debug
-    return m?.medicine?.name?.toLowerCase();
+    const name =
+      m?.medicine?.name ||
+      m?.medicine ||
+      m?.medicineName ||
+      m?.name ||
+      '';
+
+    console.log("Extracted name:", name); // debug
+
+    return name.toLowerCase();
   })
   .filter((m: string) => m && m.trim() !== '');
 

@@ -27,8 +27,8 @@
     <h3>Your Prescribed Medicines</h3>
 
     <ul *ngIf="medicines.length > 0">
-      <li *ngFor="let m of medicines">
-  {{ m?.medicine?.name }}
+     <li *ngFor="let m of medicines">
+  {{ m?.medicine?.name || m?.medicine || m?.name }}
 </li>
     </ul>
 
