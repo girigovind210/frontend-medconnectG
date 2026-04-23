@@ -72,9 +72,12 @@ export class PatientDashboardComponent implements OnInit {
   // 🏥 LOAD STORES (SMART FILTER)
  loadStores() {
 
-      const prescribed = this.medicines
-      .map((m: any) => (m?.medicine?.name || '').toLowerCase())
-      .filter(m => m);
+     const prescribed = this.medicines
+  .map((m: any) => {
+    console.log("Medicine object:", m); // debug
+    return m?.medicine?.name?.toLowerCase();
+  })
+  .filter((m: string) => m && m.trim() !== '');
 
   console.log("Prescribed:", prescribed); // debug
 
