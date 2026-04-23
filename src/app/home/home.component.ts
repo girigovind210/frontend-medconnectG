@@ -17,7 +17,8 @@ export class HomeComponent implements OnInit {
     // 🔥 handle whatsapp redirect
     if (fullUrl.includes('patient-dashboard')) {
 
-      const id = fullUrl.split('patient-dashboard/')[1];
+      const parts = fullUrl.split('patient-dashboard/');
+const id = parts.length > 1 ? parts[1] : null;
 
       if (id) {
         this.router.navigate(['/patient-dashboard', id]);
@@ -25,8 +26,8 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  // ✅ ADD THIS FUNCTION (missing earlier)
+  
   goToPatientDashboard() {
-    this.router.navigate(['/patient-dashboard']);
-  }
+  window.location.href = "/#/patient-dashboard";
+}
 }
