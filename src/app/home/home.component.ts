@@ -12,27 +12,26 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
 
-    const fullUrl = window.location.href;
+  const url = window.location.hash;
 
-    // ✅ Only trigger when ID exists (fixes button issue)
-    if (fullUrl.includes('patient-dashboard/')) {
+  // only run for WhatsApp links like #/patient-dashboard/45
+  if (url.includes('patient-dashboard/')) {
 
-      const parts = fullUrl.split('patient-dashboard/');
-      const id = parts.length > 1 ? parts[1] : null;
+    const parts = url.split('patient-dashboard/');
+    const id = parts.length > 1 ? parts[1] : null;
 
-      if (id && id.trim() !== '') {
-        this.router.navigate(['/patient-dashboard', id]);
-      }
+    if (id && id.trim() !== '') {
+      this.router.navigate(['/patient-dashboard', id]);
     }
   }
+}
 
   // ✅ Reliable button navigation (works on Render)
  goToPatientDashboard() {
   const id = prompt("Enter Patient ID:");
 
   if (id && id.trim() !== '') {
-    const baseUrl = window.location.origin;
-    window.location.href = baseUrl + "/#/patient-dashboard/" + id;
+    this.router.navigate(['/patient-dashboard', id]);
   }
 }
 }
