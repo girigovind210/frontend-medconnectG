@@ -73,8 +73,10 @@ export class PatientDashboardComponent implements OnInit {
  loadStores() {
 
   const prescribed = this.medicines
-    .map((m: any) => (m?.medicineName || m?.name || '').toLowerCase())
-    .filter(m => m);
+  .map((m: any) =>
+    (m?.medicine?.name || m?.medicineName || m?.name || '').toLowerCase()
+  )
+  .filter(m => m);
 
   console.log("Prescribed:", prescribed); // debug
 
@@ -137,7 +139,7 @@ export class PatientDashboardComponent implements OnInit {
     if (!med) return false;
 
     return this.medicines.some((p: any) =>
-      (p?.medicineName || p?.name || p?.med || '')
+      (p?.medicine?.name || p?.medicineName || p?.name || '')
         .toLowerCase() === med.toLowerCase()
     );
   }
