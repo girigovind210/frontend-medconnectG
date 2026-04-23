@@ -55,9 +55,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
-    RouterModule.forRoot(routes, {
-      useHash: true   // 🔥 IMPORTANT for WhatsApp links
-    })
+    RouterModule.forRoot(routes)
   ],
   exports: [RouterModule]
 })
