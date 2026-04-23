@@ -27,11 +27,12 @@ export class HomeComponent implements OnInit {
   }
 
   // ✅ Reliable button navigation (works on Render)
-  goToPatientDashboard() {
-    const id = prompt("Enter Patient ID:");
+ goToPatientDashboard() {
+  const id = prompt("Enter Patient ID:");
 
-    if (id && id.trim() !== '') {
-      window.location.href = "/#/patient-dashboard/" + id;
-    }
+  if (id && id.trim() !== '') {
+    const baseUrl = window.location.origin;
+    window.location.href = baseUrl + "/#/patient-dashboard/" + id;
   }
+}
 }
