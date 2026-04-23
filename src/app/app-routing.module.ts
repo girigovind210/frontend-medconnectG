@@ -23,7 +23,7 @@ const routes: Routes = [
 
   { path: 'view-medicine/:id', component: MedicinelistComponent },
   {
-    path:'',redirectTo:'home',pathMatch:'full'
+    path:'', component: HomeComponent 
   },
   {
     path:'admin',component:AdmindashComponent,canActivate:[AdminauthguardService]
