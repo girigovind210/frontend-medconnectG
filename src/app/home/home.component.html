@@ -11,6 +11,12 @@
 <nav class="navbar navbar-expand-md navbar-dark bg-dark">
   <a class="navbar-brand" href="#"><b>MedConnect</b></a>
 
+ <input type="text" [(ngModel)]="patientId" placeholder="Enter Patient ID" class="form-control mb-2">
+
+<button class="btn btn-primary" (click)="goToPatientDashboard()">
+  Login as Patient
+</button>
+
   <div class="ml-auto">
     <button style="margin:5px;" class="btn btn-danger">
       <a style="color:white;" routerLink="/doclogin">Login as Doctor</a>
