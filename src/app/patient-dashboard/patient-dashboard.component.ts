@@ -73,29 +73,7 @@ export class PatientDashboardComponent implements OnInit {
 loadStores() {
 
  const prescribed = this.medicines
-  .map((m: any) => {
-
-    let name = '';
-
-    if (m?.medicine) {
-      if (typeof m.medicine === 'string') {
-        name = m.medicine;
-      } else if (typeof m.medicine === 'object') {
-        name =
-          m.medicine.name ||
-          m.medicine.medicineName ||
-          m.medicine.drugName ||
-          '';
-      }
-    } else {
-      name = m?.medicineName || m?.name || '';
-    }
-
-    console.log("Extracted name:", name);
-
-    return typeof name === 'string' ? name.toLowerCase() : '';
-
-  })
+  .map((m: any) => this.getMedicineName(m).toLowerCase())
   .filter((m: string) => m && m.trim() !== '');
 
   console.log("Prescribed:", prescribed);
@@ -158,16 +136,32 @@ loadStores() {
  isMatch(med: string): boolean {
   if (!med) return false;
 
-  return this.medicines.some((p: any) => {
-    const name =
-      p?.medicine?.name ||
-      p?.medicine?.medicineName ||
-      p?.medicine?.drugName ||
-      (typeof p?.medicine === 'string' ? p?.medicine : '') ||
-      '';
+  return this.medicines.some((p: any) =>
+    this.getMedicineName(p).toLowerCase() === med.toLowerCase()
+  );
+}
 
-    return name.toLowerCase() === med.toLowerCase();
-  });
+getMedicineName(m: any): string {
+
+  if (!m) return '';
+
+  if (m.medicine) {
+
+    if (typeof m.medicine === 'string') {
+      return m.medicine;
+    }
+
+    if (typeof m.medicine === 'object') {
+      return (
+        m.medicine.name ||
+        m.medicine.medicineName ||
+        m.medicine.drugName ||
+        ''
+      );
+    }
+  }
+
+  return m.medicineName || m.name || '';
 }
 
 }
