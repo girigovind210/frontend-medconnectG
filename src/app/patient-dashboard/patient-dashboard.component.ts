@@ -1,12 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { PatientService } from '../patient.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-patient-dashboard',
   templateUrl: './patient-dashboard.component.html',
   styleUrls: ['./patient-dashboard.component.css']
 })
-export class PatientDashboardComponent {
+export class PatientDashboardComponent implements OnInit {
 
   patientId: string = '';
   isLoggedIn: boolean = false;
@@ -19,11 +20,25 @@ export class PatientDashboardComponent {
   stores: any[] = [];
   search: string = '';
 
-  constructor(private patientService: PatientService) {}
+  constructor(
+    private patientService: PatientService,
+    private route: ActivatedRoute
+  ) {}
+
+  // 🔥 AUTO LOGIN FROM WHATSAPP LINK
+  ngOnInit(): void {
+    const id = this.route.snapshot.paramMap.get('id');
+    console.log("Route ID:", id);
+
+    if (id) {
+      this.patientId = id;
+      this.login();   // auto trigger
+    }
+  }
 
   // 🔐 LOGIN
   login() {
-    if (!this.patientId.trim()) {
+    if (!this.patientId || this.patientId.trim() === '') {
       this.errorMessage = "Enter Patient ID";
       return;
     }
@@ -36,7 +51,7 @@ export class PatientDashboardComponent {
         this.isLoggedIn = true;
         this.errorMessage = '';
 
-        // 🔥 IMPORTANT (check your backend field name)
+        // ✅ handle all possible field names
         this.medicines = data.prescription || data.prescriptions || [];
 
         this.loadStores();
@@ -45,51 +60,54 @@ export class PatientDashboardComponent {
       error: () => {
         this.isLoggedIn = false;
         this.medicines = [];
+        this.stores = [];
+        this.totalStores = 0;
+        this.openStores = 0;
         this.errorMessage = "Invalid Patient ID";
       }
 
     });
   }
 
-  // 🏥 LOAD STORES (dummy for now)
- loadStores() {
+  // 🏥 LOAD STORES (SMART FILTER)
+  loadStores() {
 
-  // ✅ safe mapping (avoid undefined)
-  const prescribed = this.medicines
-    .map((m: any) => (m?.medicineName || m?.name || '').toLowerCase())
-    .filter(m => m); // remove empty
+    const prescribed = this.medicines
+      .map((m: any) =>
+        (m?.medicineName || m?.name || m?.med || '').toLowerCase()
+      )
+      .filter(m => m);
 
-  const allStores = [
-    {
-      name: 'City Medical',
-      open: true,
-      distance: 0.8,
-      medicines: ['Paracetamol', 'Crocin', 'Azithromycin']
-    },
-    {
-      name: 'HealthPlus Pharmacy',
-      open: false,
-      distance: 1.5,
-      medicines: ['Dolo', 'Ibuprofen']
-    },
-    {
-      name: 'Care Medical',
-      open: true,
-      distance: 2.2,
-      medicines: ['Vitamin C']
-    }
-  ];
+    const allStores = [
+      {
+        name: 'City Medical',
+        open: true,
+        distance: 0.8,
+        medicines: ['Paracetamol', 'Crocin', 'Azithromycin']
+      },
+      {
+        name: 'HealthPlus Pharmacy',
+        open: false,
+        distance: 1.5,
+        medicines: ['Dolo', 'Ibuprofen']
+      },
+      {
+        name: 'Care Medical',
+        open: true,
+        distance: 2.2,
+        medicines: ['Vitamin C']
+      }
+    ];
 
-  // ✅ safe filter
-  this.stores = allStores.filter(store =>
-    store.medicines.some((med: any) =>
-      med && prescribed.includes(med.toLowerCase())
-    )
-  );
+    this.stores = allStores.filter(store =>
+      store.medicines.some((med: any) =>
+        med && prescribed.includes(med.toLowerCase())
+      )
+    );
 
-  this.totalStores = this.stores.length;
-  this.openStores = this.stores.filter(s => s.open).length;
-}
+    this.totalStores = this.stores.length;
+    this.openStores = this.stores.filter(s => s.open).length;
+  }
 
   // 🔍 SEARCH
   searchMedicine() {
@@ -104,11 +122,15 @@ export class PatientDashboardComponent {
       )
     );
   }
- isMatch(med: string): boolean {
-  if (!med) return false;
 
-  return this.medicines.some((p: any) =>
-    (p?.medicineName || p?.name || '').toLowerCase() === med.toLowerCase()
-  );
-}
+  // 🎯 HIGHLIGHT MATCH
+  isMatch(med: string): boolean {
+    if (!med) return false;
+
+    return this.medicines.some((p: any) =>
+      (p?.medicineName || p?.name || p?.med || '')
+        .toLowerCase() === med.toLowerCase()
+    );
+  }
+
 }

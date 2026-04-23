@@ -23,7 +23,8 @@ const routes: Routes = [
   { path: '', component: HomeComponent },
 
   // 👤 Patient
-  { path: 'patient-dashboard', component: PatientDashboardComponent },
+  { path: 'patient-dashboard/:id', component: PatientDashboardComponent },
+  
   { path: 'view-medicine/:id', component: MedicinelistComponent },
 
   // 👨‍⚕️ Doctor
