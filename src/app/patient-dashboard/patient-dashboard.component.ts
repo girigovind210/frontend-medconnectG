@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-patient-dashboard',
@@ -69,4 +70,15 @@ export class PatientDashboardComponent {
       )
     );
   }
+
+  constructor(private route: ActivatedRoute) {}
+
+ngOnInit(): void {
+  const id = this.route.snapshot.queryParamMap.get('id');
+
+  if (id) {
+    this.patientId = id;
+    this.login(); // auto login
+  }
+}
 }
