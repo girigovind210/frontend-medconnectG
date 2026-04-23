@@ -16,12 +16,10 @@ export class PatientDashboardComponent implements OnInit {
   constructor(private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    console.log("Patient ID:", id);
-    alert("ID = " + id); 
-
-    this.loadStores();
-  }
+  console.log("✅ DASHBOARD LOADED");
+  const id = this.route.snapshot.paramMap.get('id');
+  alert("ID = " + id);
+}
 
   loadStores() {
     this.totalStores = 3;

@@ -27,28 +27,6 @@ const routes: Routes = [
 
   { path: '', redirectTo: 'home', pathMatch: 'full' },
 
-  { path: 'admin', component: AdmindashComponent, canActivate: [AdminauthguardService] },
-
-  { path: 'appointmentlist', component: AppointmentComponent, canActivate: [AdminauthguardService] },
-
-  { path: 'create-appointment', component: CreateAppointmentComponent, canActivate: [AdminauthguardService] },
-
-  { path: 'docdash', component: DocdashComponent, canActivate: [DoctorauthguardService] },
-
-  { path: 'create-patient', component: CreatePatientComponent, canActivate: [DoctorauthguardService] },
-
-  { path: 'create-medicine', component: CreateMedicineComponent, canActivate: [DoctorauthguardService] },
-
-  { path: 'update-patient/:id', component: UpdatePatientComponent, canActivate: [DoctorauthguardService] },
-
-  { path: 'view-patient/:id', component: ViewPatientComponent, canActivate: [DoctorauthguardService] },
-
-  { path: 'update-medicine/:id', component: UpdateMedicineComponent, canActivate: [DoctorauthguardService] },
-
-  { path: 'doclogin', component: DocloginComponent },
-
-  { path: 'adlogin', component: AdloginComponent },
-
   { path: '**', redirectTo: 'home' }
 
 ];
