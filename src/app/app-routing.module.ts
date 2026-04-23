@@ -21,9 +21,11 @@ const routes: Routes = [
 
   { path: 'patient-dashboard/:id', component: PatientDashboardComponent },
 
-  { path: 'view-medicine/:id', component: MedicinelistComponent },
+  { path: 'view-medicine/:id', component: MedicinelistComponent 
+
+  },
   {
-    path:'', redirectTo: 'home', pathMatch: 'full'
+  path:'', redirectTo:'home', pathMatch:'full'
   },
   {
     path:'admin',component:AdmindashComponent,canActivate:[AdminauthguardService]
@@ -61,12 +63,15 @@ const routes: Routes = [
   {
     path:'adlogin',component:AdloginComponent
   }, 
-  {path: '**', redirectTo: 'home'}
+  {
+  path: '**', redirectTo: 'home'
+  }
+  
   
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { useHash: true })],
+  imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
