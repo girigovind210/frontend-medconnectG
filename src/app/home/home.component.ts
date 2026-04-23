@@ -12,23 +12,24 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
 
-    const hash = window.location.hash; // e.g. #/patient-dashboard/45
+  // 🔥 Fix WhatsApp cached login issue
+  if (window.location.href.includes('patient-dashboard')) {
+    localStorage.clear();
+    sessionStorage.clear();
+  }
 
-    // 👉 If link contains patient-dashboard with ID
-    if (hash.includes('patient-dashboard/')) {
+  const hash = window.location.hash;
 
-      const parts = hash.split('patient-dashboard/');
-      const id = parts.length > 1 ? parts[1] : null;
+  if (hash.includes('patient-dashboard/')) {
 
-      if (id && id.trim() !== '') {
-        // try to go to dashboard
-        this.router.navigate(['/patient-dashboard', id]).catch(() => {
-          // ❌ fallback to home
-          this.router.navigate(['/']);
-        });
-      }
+    const parts = hash.split('patient-dashboard/');
+    const id = parts.length > 1 ? parts[1] : null;
+
+    if (id && id.trim() !== '') {
+      this.router.navigate(['/patient-dashboard', id]);
     }
   }
+}
 
   // 👇 Button always works
   goToPatientDashboard() {
