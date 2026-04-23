@@ -8,11 +8,16 @@ import { Router } from '@angular/router';
 })
 export class HomeComponent {
 
+  patientId: string = '';   // ✅ ADD THIS
+
   constructor(private router: Router) {}
 
-  // ✅ Simply navigate (no ID needed here)
   goToPatientDashboard() {
-    this.router.navigate(['/patient-dashboard']);
-  }
+    if (!this.patientId || this.patientId.trim() === '') {
+      alert('Please enter Patient ID');
+      return;
+    }
 
+    this.router.navigate(['/patient-dashboard', this.patientId]);
+  }
 }
