@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PatientService } from '../patient.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-patient-dashboard',
@@ -22,7 +22,8 @@ export class PatientDashboardComponent implements OnInit {
 
   constructor(
     private patientService: PatientService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
 
   // 🔥 AUTO LOGIN FROM WHATSAPP LINK
@@ -64,6 +65,7 @@ export class PatientDashboardComponent implements OnInit {
         this.totalStores = 0;
         this.openStores = 0;
         this.errorMessage = "Invalid Patient ID";
+        this.router.navigate(['/']);
       }
       
     });
