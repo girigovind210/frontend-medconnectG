@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { PatientService } from '../patient.service';
 
 @Component({
   selector: 'app-patient-dashboard',
@@ -11,51 +11,84 @@ export class PatientDashboardComponent {
   patientId: string = '';
   isLoggedIn: boolean = false;
 
+  medicines: any[] = [];
+  errorMessage: string = '';
+
   totalStores: number = 0;
   openStores: number = 0;
   stores: any[] = [];
   search: string = '';
 
+  constructor(private patientService: PatientService) {}
+
   // 🔐 LOGIN
   login() {
     if (!this.patientId.trim()) {
-      alert("Enter Patient ID");
+      this.errorMessage = "Enter Patient ID";
       return;
     }
 
-    this.isLoggedIn = true;
+    this.patientService.getPatientById(Number(this.patientId)).subscribe({
 
-    console.log("Patient ID:", this.patientId);
+      next: (data: any) => {
+        console.log("Patient:", data);
 
-    this.loadStores(); // load after login
-  }
+        this.isLoggedIn = true;
+        this.errorMessage = '';
 
-  // 🏥 LOAD STORES
-  loadStores() {
-    this.totalStores = 3;
-    this.openStores = 2;
+        // 🔥 IMPORTANT (check your backend field name)
+        this.medicines = data.prescription || data.prescriptions || [];
 
-    this.stores = [
-      {
-        name: 'City Medical',
-        open: true,
-        distance: 0.8,
-        medicines: ['Paracetamol', 'Crocin', 'Azithromycin']
+        this.loadStores();
       },
-      {
-        name: 'HealthPlus Pharmacy',
-        open: false,
-        distance: 1.5,
-        medicines: ['Dolo', 'Ibuprofen']
-      },
-      {
-        name: 'Care Medical',
-        open: true,
-        distance: 2.2,
-        medicines: ['Paracetamol', 'Vitamin C']
+
+      error: () => {
+        this.isLoggedIn = false;
+        this.medicines = [];
+        this.errorMessage = "Invalid Patient ID";
       }
-    ];
+
+    });
   }
+
+  // 🏥 LOAD STORES (dummy for now)
+  loadStores() {
+
+  const prescribed = this.medicines.map((m: any) =>
+    (m.medicineName || m.name).toLowerCase()
+  );
+
+  const allStores = [
+    {
+      name: 'City Medical',
+      open: true,
+      distance: 0.8,
+      medicines: ['Paracetamol', 'Crocin', 'Azithromycin']
+    },
+    {
+      name: 'HealthPlus Pharmacy',
+      open: false,
+      distance: 1.5,
+      medicines: ['Dolo', 'Ibuprofen']
+    },
+    {
+      name: 'Care Medical',
+      open: true,
+      distance: 2.2,
+      medicines: ['Vitamin C']
+    }
+  ];
+
+  // 🔥 FILTER STORES
+  this.stores = allStores.filter(store =>
+    store.medicines.some((med: string) =>
+      prescribed.includes(med.toLowerCase())
+    )
+  );
+
+  this.totalStores = this.stores.length;
+  this.openStores = this.stores.filter(s => s.open).length;
+}
 
   // 🔍 SEARCH
   searchMedicine() {
@@ -70,15 +103,9 @@ export class PatientDashboardComponent {
       )
     );
   }
-
-  constructor(private route: ActivatedRoute) {}
-
-ngOnInit(): void {
-  const id = this.route.snapshot.queryParamMap.get('id');
-
-  if (id) {
-    this.patientId = id;
-    this.login(); // auto login
-  }
+  isMatch(med: string): boolean {
+  return this.medicines.some((p: any) =>
+    (p.medicineName || p.name).toLowerCase() === med.toLowerCase()
+  );
 }
 }

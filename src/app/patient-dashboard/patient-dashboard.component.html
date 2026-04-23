@@ -1,7 +1,7 @@
 <div class="dashboard">
 
-  <!-- 🔐 LOGIN FIRST -->
-  <div *ngIf="!isLoggedIn" class="login-box">
+  <!-- 🔐 LOGIN -->
+  <div *ngIf="!isLoggedIn" class="login-box container mt-4">
     <h3>Patient Login</h3>
 
     <input
@@ -14,55 +14,87 @@
     <button class="btn btn-primary" (click)="login()">
       Continue
     </button>
+
+    <p style="color:red; margin-top:10px;" *ngIf="errorMessage">
+      {{ errorMessage }}
+    </p>
   </div>
 
   <!-- 🏥 AFTER LOGIN -->
-  <div *ngIf="isLoggedIn">
+  <div *ngIf="isLoggedIn" class="container mt-4">
 
-    <!-- Medical Stores Section -->
-    <div class="store-section">
+    <!-- 💊 PRESCRIPTION -->
+    <h3>Your Prescribed Medicines</h3>
 
-      <h2>Nearby Medical Stores</h2>
+    <ul *ngIf="medicines.length > 0">
+      <li *ngFor="let m of medicines">
+        {{ m.medicineName || m.name }}
+      </li>
+    </ul>
 
-      <div class="stats">
-        <div>Total Stores: <b>{{ totalStores }}</b></div>
-        <div>Open Now: <b>{{ openStores }}</b></div>
-      </div>
+    <p *ngIf="medicines.length === 0">
+      No medicines assigned.
+    </p>
 
-      <!-- Search -->
-      <div class="search-box">
-        <input
-          type="text"
-          placeholder="Search medicine (ex: Paracetamol)"
-          [(ngModel)]="search"
-        />
-        <button (click)="searchMedicine()">Search</button>
-      </div>
+    <hr>
 
-      <!-- Cards -->
-      <div class="store-grid">
+    <!-- 🏥 STORES -->
+    <h2>Nearby Medical Stores</h2>
 
-        <div class="store-card" *ngFor="let store of stores">
+    <div class="stats">
+      <div>Total Stores: <b>{{ totalStores }}</b></div>
+      <div>Open Now: <b>{{ openStores }}</b></div>
+    </div>
 
-          <h3>{{ store.name }}</h3>
+    <!-- 🔍 SEARCH -->
+    <div class="search-box mb-3">
+      <input
+        type="text"
+        placeholder="Search medicine (ex: Paracetamol)"
+        [(ngModel)]="search"
+        class="form-control d-inline-block w-75"
+      />
+      <button class="btn btn-secondary ml-2" (click)="searchMedicine()">
+        Search
+      </button>
+    </div>
 
-          <p>
-            Status:
-            <span class="open" *ngIf="store.open">🟢 Open</span>
-            <span class="closed" *ngIf="!store.open">🔴 Closed</span>
-          </p>
+    <!-- 🏪 STORE CARDS -->
+    <div class="store-grid">
 
-          <p><b>Distance:</b> {{ store.distance }} km</p>
+      <div class="store-card" *ngFor="let store of stores">
 
-          <p><b>Medicines:</b></p>
-          <div class="med-list">
-            <span *ngFor="let m of store.medicines">{{ m }}</span>
-          </div>
+        <h3>{{ store.name }}</h3>
 
+        <p>
+          Status:
+          <span class="open" *ngIf="store.open">🟢 Open</span>
+          <span class="closed" *ngIf="!store.open">🔴 Closed</span>
+        </p>
+
+        <p><b>Distance:</b> {{ store.distance }} km</p>
+
+        <p><b>Medicines:</b></p>
+
+        <!-- 🔥 HIGHLIGHT MATCH -->
+        <div class="med-list">
+          <span
+            *ngFor="let m of store.medicines"
+            [style.backgroundColor]="isMatch(m) ? '#d4edda' : ''"
+            [style.fontWeight]="isMatch(m) ? 'bold' : 'normal'"
+            style="padding:4px; margin:2px; display:inline-block; border-radius:4px;"
+          >
+            {{ m }}
+          </span>
         </div>
 
       </div>
 
+    </div>
+
+    <!-- ❌ EMPTY STATE -->
+    <div *ngIf="stores.length === 0" class="text-center mt-4 text-danger">
+      ❌ No nearby stores have your prescribed medicines
     </div>
 
   </div>
