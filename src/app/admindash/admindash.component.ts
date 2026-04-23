@@ -48,7 +48,7 @@ export class AdmindashComponent implements OnInit {
 
   logout(): void {
     this.adminauthService.logout();
-    this.router.navigate(['home']);
+    this.router.navigate(['/']);
   }
   
   searchText: string = '';

@@ -19,15 +19,13 @@ import { PatientDashboardComponent } from './patient-dashboard/patient-dashboard
 
 const routes: Routes = [
 
+  { path: '', component: HomeComponent },
+
   { path: 'patient-dashboard/:id', component: PatientDashboardComponent },
 
   { path: 'view-medicine/:id', component: MedicinelistComponent },
 
-  { path: 'home', component: HomeComponent },
-
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
-
-  { path: '**', redirectTo: 'home' }
+  { path: '**', redirectTo: '' }
 
 ];
 

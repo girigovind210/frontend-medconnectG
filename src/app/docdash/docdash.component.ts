@@ -85,6 +85,6 @@ export class DocdashComponent implements OnInit {
   // 🔹 Logout
   logout(): void {
     this.docauth.logout();
-    this.router.navigate(['home']);
+    this.router.navigate(['/']);
   }
 }
