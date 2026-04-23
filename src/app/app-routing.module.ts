@@ -21,8 +21,8 @@ import { DoctorauthguardService } from './doctorauthguard.service';
 
 const routes: Routes = [
 
-  // ✅ HOME (explicit route)
-  { path: 'home', component: HomeComponent },
+  
+   { path: '', component: HomeComponent },
 
   // 👤 PATIENT
   { path: 'patient-dashboard/:id', component: PatientDashboardComponent },
