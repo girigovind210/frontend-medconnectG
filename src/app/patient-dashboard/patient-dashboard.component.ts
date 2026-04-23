@@ -70,24 +70,35 @@ export class PatientDashboardComponent implements OnInit {
   }
 
   // 🏥 LOAD STORES (SMART FILTER)
- loadStores() {
+loadStores() {
 
-     const prescribed = this.medicines
+ const prescribed = this.medicines
   .map((m: any) => {
-    const name =
-      m?.medicine?.name ||
-      m?.medicine ||
-      m?.medicineName ||
-      m?.name ||
-      '';
 
-    console.log("Extracted name:", name); // debug
+    let name = '';
 
-    return name.toLowerCase();
+    if (m?.medicine) {
+      if (typeof m.medicine === 'string') {
+        name = m.medicine;
+      } else if (typeof m.medicine === 'object') {
+        name =
+          m.medicine.name ||
+          m.medicine.medicineName ||
+          m.medicine.drugName ||
+          '';
+      }
+    } else {
+      name = m?.medicineName || m?.name || '';
+    }
+
+    console.log("Extracted name:", name);
+
+    return typeof name === 'string' ? name.toLowerCase() : '';
+
   })
   .filter((m: string) => m && m.trim() !== '');
 
-  console.log("Prescribed:", prescribed); // debug
+  console.log("Prescribed:", prescribed);
 
   const allStores = [
     {
@@ -110,16 +121,16 @@ export class PatientDashboardComponent implements OnInit {
     }
   ];
 
-  // ✅ SMART MATCH (both directions)
   this.stores = allStores.filter(store =>
     store.medicines.some((med: string) =>
       prescribed.some(p =>
-        p.includes(med.toLowerCase()) || med.toLowerCase().includes(p)
+        p.includes(med.toLowerCase()) ||
+        med.toLowerCase().includes(p)
       )
     )
   );
 
-  // ✅ fallback (important for demo)
+  // fallback
   if (this.stores.length === 0) {
     console.log("No match → showing all stores");
     this.stores = allStores;
@@ -144,13 +155,19 @@ export class PatientDashboardComponent implements OnInit {
   }
 
   // 🎯 HIGHLIGHT MATCH
-  isMatch(med: string): boolean {
-    if (!med) return false;
+ isMatch(med: string): boolean {
+  if (!med) return false;
 
-    return this.medicines.some((p: any) =>
-      (p?.medicine?.name || '')
-        .toLowerCase() === med.toLowerCase()
-    );
-  }
+  return this.medicines.some((p: any) => {
+    const name =
+      p?.medicine?.name ||
+      p?.medicine?.medicineName ||
+      p?.medicine?.drugName ||
+      (typeof p?.medicine === 'string' ? p?.medicine : '') ||
+      '';
+
+    return name.toLowerCase() === med.toLowerCase();
+  });
+}
 
 }
