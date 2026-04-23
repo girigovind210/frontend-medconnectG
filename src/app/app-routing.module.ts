@@ -24,7 +24,7 @@ const routes: Routes = [
 
   // 👤 Patient
   { path: 'patient-dashboard/:id', component: PatientDashboardComponent },
-  
+
   { path: 'view-medicine/:id', component: MedicinelistComponent },
 
   // 👨‍⚕️ Doctor
@@ -48,7 +48,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { useHash: true })],
+  imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

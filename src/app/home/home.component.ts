@@ -1,25 +1,32 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent {
-
-  patientId: string = '';   // ✅ ADD THIS
+export class HomeComponent implements OnInit {
 
   constructor(private router: Router) {}
 
-  goToPatientDashboard() {
-  const id = prompt('Enter Patient ID');
+  ngOnInit(): void {
 
-  if (!id || id.trim() === '') {
-    alert('Please enter Patient ID');
-    return;
+    const fullUrl = window.location.href;
+
+    // 🔥 handle whatsapp redirect
+    if (fullUrl.includes('patient-dashboard')) {
+
+      const id = fullUrl.split('patient-dashboard/')[1];
+
+      if (id) {
+        this.router.navigate(['/patient-dashboard', id]);
+      }
+    }
   }
 
-  this.router.navigate(['/patient-dashboard', id]);
-}
+  // ✅ ADD THIS FUNCTION (missing earlier)
+  goToPatientDashboard() {
+    this.router.navigate(['/patient-dashboard']);
+  }
 }
