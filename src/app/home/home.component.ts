@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -6,18 +6,32 @@ import { Router } from '@angular/router';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent {
-
-  patientId: string = '';   // ✅ ADD THIS
+export class HomeComponent implements OnInit {
 
   constructor(private router: Router) {}
 
-  goToPatientDashboard() {
-    if (!this.patientId || this.patientId.trim() === '') {
-      alert('Please enter Patient ID');
-      return;
-    }
+  ngOnInit(): void {
 
-    this.router.navigate(['/patient-dashboard', this.patientId]);
+    const fullUrl = window.location.href;
+
+    // ✅ Only trigger when ID exists (fixes button issue)
+    if (fullUrl.includes('patient-dashboard/')) {
+
+      const parts = fullUrl.split('patient-dashboard/');
+      const id = parts.length > 1 ? parts[1] : null;
+
+      if (id && id.trim() !== '') {
+        this.router.navigate(['/patient-dashboard', id]);
+      }
+    }
+  }
+
+  // ✅ Reliable button navigation (works on Render)
+  goToPatientDashboard() {
+    const id = prompt("Enter Patient ID:");
+
+    if (id && id.trim() !== '') {
+      window.location.href = "/#/patient-dashboard/" + id;
+    }
   }
 }
