@@ -72,11 +72,9 @@ export class PatientDashboardComponent implements OnInit {
   // 🏥 LOAD STORES (SMART FILTER)
  loadStores() {
 
-  const prescribed = this.medicines
-  .map((m: any) =>
-    (m?.medicine?.name || m?.medicineName || m?.name || '').toLowerCase()
-  )
-  .filter(m => m);
+      const prescribed = this.medicines
+      .map((m: any) => (m?.medicine?.name || '').toLowerCase())
+      .filter(m => m);
 
   console.log("Prescribed:", prescribed); // debug
 
@@ -139,7 +137,7 @@ export class PatientDashboardComponent implements OnInit {
     if (!med) return false;
 
     return this.medicines.some((p: any) =>
-      (p?.medicine?.name || p?.medicineName || p?.name || '')
+      (p?.medicine?.name || '')
         .toLowerCase() === med.toLowerCase()
     );
   }

@@ -28,8 +28,8 @@
 
     <ul *ngIf="medicines.length > 0">
       <li *ngFor="let m of medicines">
-        {{ m?.medicine?.name || m?.medicineName || m?.name }}
-      </li>
+  {{ m?.medicine?.name }}
+</li>
     </ul>
 
     <p *ngIf="medicines.length === 0">
