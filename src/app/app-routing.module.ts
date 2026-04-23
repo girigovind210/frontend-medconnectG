@@ -21,7 +21,7 @@ import { DoctorauthguardService } from './doctorauthguard.service';
 
 const routes: Routes = [
 
-  
+  // ✅ HOME (explicit route)
    { path: '', component: HomeComponent },
 
   // 👤 PATIENT
@@ -55,7 +55,9 @@ const routes: Routes = [
 
 @NgModule({
   imports: [
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot(routes, {
+      useHash: true   // 🔥 IMPORTANT for WhatsApp links
+    })
   ],
   exports: [RouterModule]
 })
