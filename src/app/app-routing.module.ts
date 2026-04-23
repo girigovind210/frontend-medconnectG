@@ -20,58 +20,37 @@ import { PatientDashboardComponent } from './patient-dashboard/patient-dashboard
 const routes: Routes = [
 
   { path: 'patient-dashboard/:id', component: PatientDashboardComponent },
-  { path: 'index.html', redirectTo: '', pathMatch: 'full' },
 
-  { path: 'view-medicine/:id', component: MedicinelistComponent 
+  { path: 'view-medicine/:id', component: MedicinelistComponent },
 
-  },
-  {
-  path:'', redirectTo:'home', pathMatch:'full'
-  },
-  {
-    path:'admin',component:AdmindashComponent,canActivate:[AdminauthguardService]
-  },
-  {
-    path:'appointmentlist',component:AppointmentComponent,canActivate:[AdminauthguardService]
-  },
-  {
-    path:'create-appointment',component:CreateAppointmentComponent,canActivate:[AdminauthguardService]
-  },
-  {
-    path:'home',component:HomeComponent
-  },
+  { path: 'home', component: HomeComponent },
+
   { path: '', redirectTo: 'home', pathMatch: 'full' },
-  
 
-  {
-    path:'docdash',component:DocdashComponent,canActivate:[DoctorauthguardService]
-  },
-  {
-    path:'create-patient',component:CreatePatientComponent,canActivate:[DoctorauthguardService]
-  },
-  {
-    path:'create-medicine',component:CreateMedicineComponent,canActivate:[DoctorauthguardService]
-  },
-  {
-    path:'update-patient/:id',component:UpdatePatientComponent,canActivate:[DoctorauthguardService]
-  },
-  {
-    path:'view-patient/:id',component:ViewPatientComponent,canActivate:[DoctorauthguardService]
-  },
-  {
-    path:'update-medicine/:id',component:UpdateMedicineComponent,canActivate:[DoctorauthguardService]
-  },
-  {
-    path:'doclogin',component:DocloginComponent
-  },
-  {
-    path:'adlogin',component:AdloginComponent
-  }, 
-  {
-  path: '**', redirectTo: 'home'
-  }
-  
-  
+  { path: 'admin', component: AdmindashComponent, canActivate: [AdminauthguardService] },
+
+  { path: 'appointmentlist', component: AppointmentComponent, canActivate: [AdminauthguardService] },
+
+  { path: 'create-appointment', component: CreateAppointmentComponent, canActivate: [AdminauthguardService] },
+
+  { path: 'docdash', component: DocdashComponent, canActivate: [DoctorauthguardService] },
+
+  { path: 'create-patient', component: CreatePatientComponent, canActivate: [DoctorauthguardService] },
+
+  { path: 'create-medicine', component: CreateMedicineComponent, canActivate: [DoctorauthguardService] },
+
+  { path: 'update-patient/:id', component: UpdatePatientComponent, canActivate: [DoctorauthguardService] },
+
+  { path: 'view-patient/:id', component: ViewPatientComponent, canActivate: [DoctorauthguardService] },
+
+  { path: 'update-medicine/:id', component: UpdateMedicineComponent, canActivate: [DoctorauthguardService] },
+
+  { path: 'doclogin', component: DocloginComponent },
+
+  { path: 'adlogin', component: AdloginComponent },
+
+  { path: '**', redirectTo: 'home' }
+
 ];
 
 @NgModule({
