@@ -70,44 +70,43 @@ export class PatientDashboardComponent implements OnInit {
   }
 
   // 🏥 LOAD STORES (SMART FILTER)
-  loadStores() {
+ loadStores() {
 
-    const prescribed = this.medicines
-      .map((m: any) =>
-        (m?.medicineName || m?.name || m?.med || '').toLowerCase()
-      )
-      .filter(m => m);
+  const prescribed = this.medicines
+    .map((m: any) => (m?.medicineName || m?.name || '').toLowerCase())
+    .filter(m => m);
 
-    const allStores = [
-      {
-        name: 'City Medical',
-        open: true,
-        distance: 0.8,
-        medicines: ['Paracetamol', 'Crocin', 'Azithromycin']
-      },
-      {
-        name: 'HealthPlus Pharmacy',
-        open: false,
-        distance: 1.5,
-        medicines: ['Dolo', 'Ibuprofen']
-      },
-      {
-        name: 'Care Medical',
-        open: true,
-        distance: 2.2,
-        medicines: ['Vitamin C']
-      }
-    ];
+  const allStores = [
+    {
+      name: 'City Medical',
+      open: true,
+      distance: 0.8,
+      medicines: ['Paracetamol', 'Crocin', 'Azithromycin']
+    },
+    {
+      name: 'HealthPlus Pharmacy',
+      open: false,
+      distance: 1.5,
+      medicines: ['Dolo', 'Ibuprofen']
+    },
+    {
+      name: 'Care Medical',
+      open: true,
+      distance: 2.2,
+      medicines: ['Vitamin C', 'Azithromycin']
+    }
+  ];
 
-    this.stores = allStores.filter(store =>
-      store.medicines.some((med: any) =>
-        med && prescribed.includes(med.toLowerCase())
-      )
-    );
+  // ✅ SMART MATCH (partial)
+  this.stores = allStores.filter(store =>
+    store.medicines.some((med: string) =>
+      prescribed.some(p => p.includes(med.toLowerCase()))
+    )
+  );
 
-    this.totalStores = this.stores.length;
-    this.openStores = this.stores.filter(s => s.open).length;
-  }
+  this.totalStores = this.stores.length;
+  this.openStores = this.stores.filter(s => s.open).length;
+}
 
   // 🔍 SEARCH
   searchMedicine() {

@@ -27,7 +27,7 @@ export class DocloginComponent {
     else {
       this.invalidLogin=true
       alert("Wrong Credentials")
-      this.router.navigate(['home'])
+      
       
     }
   }

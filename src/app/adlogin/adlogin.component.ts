@@ -26,7 +26,7 @@ export class AdloginComponent {
   else {
     this.inValidLogin=true;
     alert("Wrong Credentials");
-    this.router.navigate(['home'])
+    
   }
   
 }
