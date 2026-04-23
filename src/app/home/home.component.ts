@@ -10,14 +10,16 @@ export class HomeComponent implements OnInit {
 
   constructor(private router: Router) {}
 
-  ngOnInit(): void {
+ ngOnInit(): void {
 
-  // 🔥 Fix WhatsApp cached login issue
-  if (window.location.href.includes('patient-dashboard')) {
-    localStorage.clear();
-    sessionStorage.clear();
+  // 🔥 STEP 1: Fix wrong URL (/home# → /#)
+  if (window.location.href.includes('/home#')) {
+    const fixed = window.location.href.replace('/home#', '/#');
+    window.location.replace(fixed);
+    return; // stop further execution
   }
 
+  // 🔥 STEP 2: Handle WhatsApp deep link
   const hash = window.location.hash;
 
   if (hash.includes('patient-dashboard/')) {
