@@ -1,26 +1,35 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-patient-dashboard',
   templateUrl: './patient-dashboard.component.html',
   styleUrls: ['./patient-dashboard.component.css']
 })
-export class PatientDashboardComponent implements OnInit {
+export class PatientDashboardComponent {
+
+  patientId: string = '';
+  isLoggedIn: boolean = false;
 
   totalStores: number = 0;
   openStores: number = 0;
   stores: any[] = [];
   search: string = '';
 
-  constructor(private route: ActivatedRoute) {}
+  // 🔐 LOGIN
+  login() {
+    if (!this.patientId.trim()) {
+      alert("Enter Patient ID");
+      return;
+    }
 
-  ngOnInit(): void {
-  console.log("✅ DASHBOARD LOADED");
-  const id = this.route.snapshot.paramMap.get('id');
-  alert("ID = " + id);
-}
+    this.isLoggedIn = true;
 
+    console.log("Patient ID:", this.patientId);
+
+    this.loadStores(); // load after login
+  }
+
+  // 🏥 LOAD STORES
   loadStores() {
     this.totalStores = 3;
     this.openStores = 2;
@@ -47,6 +56,7 @@ export class PatientDashboardComponent implements OnInit {
     ];
   }
 
+  // 🔍 SEARCH
   searchMedicine() {
     if (!this.search) {
       this.loadStores();
