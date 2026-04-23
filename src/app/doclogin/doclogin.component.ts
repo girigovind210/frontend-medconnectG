@@ -31,4 +31,9 @@ export class DocloginComponent {
       
     }
   }
+  logout() {
+  localStorage.clear();   // 👈 important
+  sessionStorage.clear(); // 👈 optional
+  this.router.navigate(['/home']);
+}
 }
