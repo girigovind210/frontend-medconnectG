@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+
 import { AdmindashComponent } from './admindash/admindash.component';
 import { AppointmentComponent } from './appointment/appointment.component';
 import { CreateAppointmentComponent } from './create-appointment/create-appointment.component';
@@ -13,21 +14,23 @@ import { ViewPatientComponent } from './view-patient/view-patient.component';
 import { UpdateMedicineComponent } from './update-medicine/update-medicine.component';
 import { DocloginComponent } from './doclogin/doclogin.component';
 import { AdloginComponent } from './adlogin/adlogin.component';
+import { PatientDashboardComponent } from './patient-dashboard/patient-dashboard.component';
+
 import { AdminauthguardService } from './adminauthguard.service';
 import { DoctorauthguardService } from './doctorauthguard.service';
-import { PatientDashboardComponent } from './patient-dashboard/patient-dashboard.component';
 
 const routes: Routes = [
 
-  // 🏠 Home (root)
-  { path: '', component: HomeComponent },
+  // ✅ HOME (explicit route)
+  { path: 'home', component: HomeComponent },
 
-  // 👤 Patient
+  // 👤 PATIENT
   { path: 'patient-dashboard/:id', component: PatientDashboardComponent },
+  { path: 'patient-dashboard', component: PatientDashboardComponent },
 
   { path: 'view-medicine/:id', component: MedicinelistComponent },
 
-  // 👨‍⚕️ Doctor
+  // 👨‍⚕️ DOCTOR
   { path: 'doclogin', component: DocloginComponent },
   { path: 'docdash', component: DocdashComponent, canActivate: [DoctorauthguardService] },
   { path: 'create-patient', component: CreatePatientComponent, canActivate: [DoctorauthguardService] },
@@ -36,19 +39,26 @@ const routes: Routes = [
   { path: 'create-medicine', component: CreateMedicineComponent, canActivate: [DoctorauthguardService] },
   { path: 'update-medicine/:id', component: UpdateMedicineComponent, canActivate: [DoctorauthguardService] },
 
-  // 🛠 Admin
+  // 🛠 ADMIN
   { path: 'adlogin', component: AdloginComponent },
   { path: 'admin', component: AdmindashComponent, canActivate: [AdminauthguardService] },
   { path: 'appointmentlist', component: AppointmentComponent, canActivate: [AdminauthguardService] },
   { path: 'create-appointment', component: CreateAppointmentComponent, canActivate: [AdminauthguardService] },
 
-  // ❌ fallback
-  { path: '**', redirectTo: '' }
+  // ✅ DEFAULT REDIRECT (VERY IMPORTANT)
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
+
+  // ❌ FALLBACK
+  { path: '**', redirectTo: 'home' }
 
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [
+    RouterModule.forRoot(routes, {
+      useHash: true   // 🔥 IMPORTANT for WhatsApp links
+    })
+  ],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
