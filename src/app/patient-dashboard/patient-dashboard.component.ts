@@ -52,11 +52,12 @@ export class PatientDashboardComponent {
   }
 
   // 🏥 LOAD STORES (dummy for now)
-  loadStores() {
+ loadStores() {
 
-  const prescribed = this.medicines.map((m: any) =>
-    (m.medicineName || m.name).toLowerCase()
-  );
+  // ✅ safe mapping (avoid undefined)
+  const prescribed = this.medicines
+    .map((m: any) => (m?.medicineName || m?.name || '').toLowerCase())
+    .filter(m => m); // remove empty
 
   const allStores = [
     {
@@ -79,10 +80,10 @@ export class PatientDashboardComponent {
     }
   ];
 
-  // 🔥 FILTER STORES
+  // ✅ safe filter
   this.stores = allStores.filter(store =>
-    store.medicines.some((med: string) =>
-      prescribed.includes(med.toLowerCase())
+    store.medicines.some((med: any) =>
+      med && prescribed.includes(med.toLowerCase())
     )
   );
 
@@ -103,9 +104,11 @@ export class PatientDashboardComponent {
       )
     );
   }
-  isMatch(med: string): boolean {
+ isMatch(med: string): boolean {
+  if (!med) return false;
+
   return this.medicines.some((p: any) =>
-    (p.medicineName || p.name).toLowerCase() === med.toLowerCase()
+    (p?.medicineName || p?.name || '').toLowerCase() === med.toLowerCase()
   );
 }
 }
