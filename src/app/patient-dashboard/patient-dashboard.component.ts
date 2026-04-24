@@ -85,19 +85,25 @@ loadStores() {
       name: 'City Medical',
       open: true,
       distance: 0.8,
-      medicines: ['Paracetamol', 'Crocin', 'Azithromycin']
+      medicines: ['Paracetamol', 'Crocin', 'Azithromycin','Amlodipini']
     },
     {
       name: 'HealthPlus Pharmacy',
       open: false,
       distance: 1.5,
-      medicines: ['Dolo', 'Ibuprofen']
+      medicines: ['Dolo', 'Ibuprofen','Ultracet']
     },
     {
       name: 'Care Medical',
       open: true,
       distance: 2.2,
-      medicines: ['Vitamin C', 'Azithromycin']
+      medicines: ['Vitamin C', 'Azithromycin','Dolo']
+    },
+    {
+      name: 'City Medical',
+      open: true,
+      distance: 0.8,
+      medicines: ['Paracetamol', 'Crocin', 'Azithromycin','Calpol(500mg)']
     }
   ];
 
